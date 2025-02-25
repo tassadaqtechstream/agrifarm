@@ -40,7 +40,7 @@ export default function MainHeader() {
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/">
+                            <Link className={`nav-link ${location.pathname === "/tools" ? "active" : ""}`} to="/tools">
                                 Crop Converter
                             </Link>
                         </li>

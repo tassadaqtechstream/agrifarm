@@ -797,3 +797,80 @@ ul.solution-box-text p {
     background-color: #e9ecef;
     opacity: 1;
 }
+.login-section {
+    height: 100%;
+    background-image: url("assets/loginbanner.jpg");
+    background-size: cover;
+}
+.login-container {
+    height: 100%;
+    max-width: 600px !important;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+.login-sessionlogo {
+    padding: 41px 0 69px 0;
+}
+.login-sessionform {
+    margin: 0 auto 30px;
+    max-width: 300px;
+}
+.login-sessionform h2 {
+    font-size: 30px;
+}
+.login-sessionform button {
+    height: 54px;
+    border: none;
+    border-radius: 10px;
+}
+.calculator-container .login-sessionform label {
+    font-size: 16px;
+    font-weight: 400;
+    font-family: "Open Sans", serif;
+}
+.login-sessionlinks a {
+    color: #358d08;
+}
+.user-registration {
+    margin-bottom: 53px;
+    color: #5a5956 !important;
+}
+.user-registration__header {
+    margin-top: 54px;
+    padding: 0 50px;
+}
+
+.user-registration__col {
+    margin-top: 54px;
+    padding: 0 50px;
+}
+.user-registration__col:first-child {
+    border-right: 1px dotted #e2e2e2;
+}
+label.required:after {
+    content: "*";
+}
+.form-group {
+    margin-bottom: 1rem;
+}
+.user-registration__col {
+    margin-top: 54px;
+    padding: 0 50px;
+}
+.user-registration label {
+    font-size: 16px;
+    font-weight: 500;
+    font-family: "Open Sans", serif;
+}
+.user-registration .form-control {
+    font-weight: 400;
+    font-family: "Open Sans", serif;
+    -webkit-appearance: menulist-button;
+    -moz-appearance: menulist-button;
+    appearance: menulist-button;
+}
+.link-green {
+    color: #358d08;
+}
+.user-registration .form-check-label {
+    font-size: 13px;
+}

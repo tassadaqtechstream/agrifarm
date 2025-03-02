@@ -12,9 +12,11 @@ const Key = () => {
         <section className="our-solution-sec bg-white text-center">
             <Container className="px-5">
                 <div className="text-center text-holder mb-4">
-                    <h2>KEY <span>FEATURES</span></h2>
+                    <h2>
+                        KEY <span>FEATURES</span>
+                    </h2>
                     <p className="text-center">
-                        Discover how Agri Marketplace can benefit you and all other food supply chain actors.
+                        Discover how Green Oasis AG MarketPlace can benefit you and all other food supply chain actors.
                     </p>
                 </div>
                 <Row className="text-center features-row">
@@ -24,7 +26,9 @@ const Key = () => {
                             <Image className="img--top" src={key1Img} alt="Transparency" width={100} height={100} />
                         </div>
                         <p className="container-features__subtitle">Transparency</p>
-                        <p className="container-features__text">Direct transactions between farmers and industry/retail</p>
+                        <p className="container-features__text">
+                            Direct transactions between farmers and industry/retail
+                        </p>
                     </Col>
                     <Col md={3} className="col__adv">
                         <div className="container--img">
@@ -45,15 +49,25 @@ const Key = () => {
                     <Col md={3} className="col__adv">
                         <div className="container--img">
                             <Image className="img--base" src={baseImg} alt="Oval" width={100} height={100} />
-                            <Image className="img--top" src={key4Img} alt="Food Traceability" width={100} height={100} />
+                            <Image
+                                className="img--top"
+                                src={key4Img}
+                                alt="Food Traceability"
+                                width={100}
+                                height={100}
+                            />
                         </div>
                         <p className="container-features__subtitle">Food Traceability</p>
-                        <p className="container-features__text">Crop reliability through supply chain traceability<br />(coming soon)</p>
+                        <p className="container-features__text">
+                            Crop reliability through supply chain traceability
+                            <br />
+                            (coming soon)
+                        </p>
                     </Col>
                 </Row>
             </Container>
         </section>
     );
-}
+};
 
 export default Key;

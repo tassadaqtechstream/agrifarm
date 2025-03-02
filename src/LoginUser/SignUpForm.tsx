@@ -175,7 +175,7 @@ const SignUpForm = () => {
                                 <>
                                     I agree with the
                                     <Link className="link-green ms-1 me-1" to="/" target="_blank">
-                                        Agri Marketplace Terms
+                                        Green Oasis AG MarketPlace Terms
                                     </Link>
                                     and
                                     <Link className="link-green ms-1 me-1" to="/" target="_blank">

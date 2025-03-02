@@ -2,7 +2,7 @@
 body {
     font-family: "Open Sans", serif;
     font-size: 14px;
-    color: #5a5956;
+    color: #333333;
 }
 
 a.active,
@@ -103,7 +103,7 @@ img {
 }
 
 .topbar {
-    background-color: #4d5056;
+    background-color: #333333;
     color: #ffffff;
     height: 38px;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
@@ -119,13 +119,19 @@ img {
 .login-a img {
     margin: 0 4px 2px 0;
 }
+.topbar .btn-header {
+    background-color: #4caf50 !important;
+}
 .btn-header {
-    background-image: linear-gradient(to bottom, #83c158, #608d41);
+    background-color: #4caf50;
     color: #fff;
     margin-left: 10px;
     font-size: 14px;
     border-radius: 2px;
     padding: 1px 24.8px 2.2px;
+}
+.btn-header:hover {
+    background-color: #388e3c;
 }
 .header-right {
     height: 25px;
@@ -140,7 +146,7 @@ img {
     font-size: 14px;
 }
 .main-header a {
-    color: #636363 !important;
+    color: #333333 !important;
     text-transform: uppercase;
     font-size: 24px;
     margin-left: 48px;
@@ -149,15 +155,15 @@ img {
     position: relative;
 }
 .main-header a.active {
-    color: #74ab4e !important;
+    color: #4caf50 !important;
     text-decoration: none;
 }
 .main-header a:hover {
-    color: #74ab4e !important;
+    color: #4caf50 !important;
     text-decoration: none;
 }
 .hero-section {
-    background-image: linear-gradient(282deg, rgba(174, 213, 121, 0), rgba(99, 144, 56, 0.8)), url("assets/banner.jpg");
+    background-image: linear-gradient(282deg, rgba(174, 213, 121, 0), rgb(20 34 6 / 87%)), url(/src/assets/banner.webp);
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -178,7 +184,7 @@ img {
     visibility: visible;
 }
 .main-header a:before {
-    background-color: #74ab4e;
+    background-color: #4caf50;
     height: 3px;
     width: 100%;
     content: "";
@@ -214,7 +220,7 @@ img {
 }
 .btn-white {
     background: #fff;
-    color: #84b562;
+    color: #388e3c;
     font-size: 18px;
     border: 1px solid #fff !important;
     text-transform: uppercase;
@@ -277,10 +283,10 @@ section {
     text-transform: uppercase;
     margin-bottom: 25px;
     font-weight: 400;
-    color: #5a5956;
+    color: #333333;
 }
 .text-holder h2 span {
-    color: #74ab4e;
+    color: #4caf50;
 }
 .text-holder p {
     font-size: 18px;
@@ -300,13 +306,13 @@ section {
 .outlinebtn {
     height: 42px;
     font-weight: bolder;
-    border: solid 1.5px #74ab4e !important;
+    border: solid 1.5px #388e3c !important;
     background-color: transparent !important;
-    color: #74ab4e !important;
+    color: #388e3c !important;
     border-radius: 5px;
 }
 .outlinebtn:hover {
-    background-color: #74ab4e !important;
+    background-color: #4caf50 !important;
     color: #fff !important;
 }
 
@@ -318,7 +324,7 @@ ul.solution-box-text li:before {
     content: "\2714";
     margin-left: -20px;
     margin-right: 10px;
-    color: #74ab4e;
+    color: #4caf50;
     font-weight: bolder;
 }
 .solution-box-video {
@@ -343,7 +349,9 @@ ul.solution-box-text p {
     background: url("assets/laptop.png") center center no-repeat;
     background-size: contain;
 }
-
+hr {
+    border-color: #f5f5f5 !important;
+}
 #video_div video {
     padding: 20% 15%;
     width: 100%;
@@ -354,7 +362,7 @@ ul.solution-box-text p {
 }
 .solution-box-text h6 {
     font-size: 1.5rem;
-    color: #74ab4e;
+    color: #4caf50;
 }
 .OurServices-img img {
     margin-top: 5%;
@@ -370,11 +378,11 @@ ul.solution-box-text p {
 }
 .premium-partner-card p {
     font-size: 14px;
-    color: #5a5956;
+    color: #333333;
     margin: 0;
 }
 .premium-partner-card h6 {
-    color: #5a5956;
+    color: #333333;
     margin: 5px 0;
     text-transform: uppercase;
 }
@@ -430,7 +438,7 @@ ul.solution-box-text p {
 .container-features__text,
 .container-features__learn-more {
     font-size: 14px;
-    color: #5a5956;
+    color: #333333;
     padding-bottom: 15%;
 }
 .col__adv:hover {
@@ -508,7 +516,7 @@ ul.solution-box-text p {
 }
 .slick-dots li.slick-active button:before {
     opacity: 1;
-    color: #74ab4e !important;
+    color: #4caf50 !important;
 }
 .slick-dots li {
     margin: 0 2px;
@@ -535,7 +543,7 @@ ul.solution-box-text p {
     line-height: 1;
     text-transform: uppercase;
     font-weight: 600;
-    color: #5a5956;
+    color: #333333;
 }
 
 .footer .footer-top .footer-contact p,
@@ -544,13 +552,13 @@ ul.solution-box-text p {
     line-height: 24px;
     margin-bottom: 0;
     font-family: "Jost", sans-serif;
-    color: #5a5956;
+    color: #333333;
 }
 
 .footer .footer-top h4 {
     font-size: 16px;
     font-weight: bold;
-    color: #5a5956;
+    color: #333333;
     position: relative;
     padding-bottom: 12px;
 }
@@ -582,7 +590,7 @@ ul.solution-box-text p {
 }
 
 .footer .footer-top .footer-links ul a {
-    color: #5a5956;
+    color: #333333;
     transition: 0.3s;
     display: inline-block;
     line-height: 1;
@@ -594,9 +602,7 @@ ul.solution-box-text p {
 }
 
 .footer .footer-bottom {
-    padding-top: 30px;
-    padding-bottom: 30px;
-    color: #6c757d;
+    color: #333333;
 }
 
 .footer .copyright {
@@ -649,7 +655,7 @@ ul.solution-box-text p {
     margin-right: 6px;
 }
 .commodities-tabs .nav-link {
-    color: #84b562;
+    color: #388e3c;
     font-size: 20px;
     border-radius: 5%;
     border: 0px solid white;
@@ -669,7 +675,7 @@ ul.solution-box-text p {
 
 .commodities-tabs .nav-link:hover {
     color: white;
-    background-color: #6dac44 !important;
+    background-color: #388e3c !important;
     cursor: pointer;
     transform: translateY(-5px);
     box-shadow: 0px 15px 20px rgba(0, 20, 20, 0.4);
@@ -677,7 +683,7 @@ ul.solution-box-text p {
 .commodities-tabs .nav-link.active {
     color: white;
     border: 1px solid white;
-    background-color: #6dac44 !important;
+    background-color: #388e3c !important;
     transform: translateY(-5px);
     box-shadow: 0px 15px 20px rgba(0, 20, 20, 0.4);
 }
@@ -832,7 +838,7 @@ ul.solution-box-text p {
 }
 .user-registration {
     margin-bottom: 53px;
-    color: #5a5956 !important;
+    color: #333333 !important;
 }
 .user-registration__header {
     margin-top: 54px;
@@ -873,4 +879,14 @@ label.required:after {
 }
 .user-registration .form-check-label {
     font-size: 13px;
+}
+.quailty-section h5 {
+    margin-bottom: 15px;
+    font-weight: 700;
+    font-family: "Open Sans", serif;
+    font-size: 18px;
+}
+.hero-content-right .btn-white:hover {
+    color: #fff !important;
+    background-color: #4caf50 !important;
 }

@@ -8,10 +8,12 @@ const OurServices = () => {
         <section className="our-solution-sec">
             <Container>
                 <div className="text-center text-holder mb-4">
-                    <h2>Our <span>Services</span></h2>
+                    <h2>
+                        Our <span>Services</span>
+                    </h2>
                     <p>
-                        Agri marketplace provides all of the following services through internal operations
-                        in combination with our specialized partnership network.
+                        Green Oasis AG MarketPlace provides all of the following services through internal operations in
+                        combination with our specialized partnership network.
                     </p>
                 </div>
 
@@ -21,6 +23,6 @@ const OurServices = () => {
             </Container>
         </section>
     );
-}
+};
 
 export default OurServices;

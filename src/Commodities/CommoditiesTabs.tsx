@@ -45,7 +45,7 @@ function CommoditiesTabs() {
                                 <Row className="justify-content-center">
                                     {commodity.products.map((product, index) => (
                                         <Col key={index} md={2} className="p-3">
-                                            <Link to="/" className="commodities-card d-block text-center">
+                                            <Link to="/filter" className="commodities-card d-block text-center">
                                                 <Image src={commodity.image} alt={product} />
                                                 <p>{product}</p>
                                             </Link>

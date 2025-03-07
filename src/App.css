@@ -1027,3 +1027,20 @@ label.required:after {
 .product-order__ppt_buy {
     color: #f6a600;
 }
+.offer-container {
+    border-radius: 3px;
+    background-color: #f7f9f7;
+    border-bottom: 2px solid white;
+    font-size: 16px;
+    padding: 17px;
+}
+.filter-sec .textarea-box {
+    height: auto !important;
+}
+.offer-sec .form-control {
+    -webkit-appearance: none;
+}
+.offer-sec .btn-header {
+    min-width: 245px;
+    height: 54px;
+}

@@ -10,7 +10,7 @@ const OrderBoard = () => {
                 <div className="mb-2 d-flex justify-content-between align-items-center">
                     <h3 className="text-uppercase font-weight-bold">Order Board</h3>
 
-                    <Link to="/">
+                    <Link to="/new-offer">
                         <Button
                             className="btn btn-header  ms-0 border-0 btn btn-primary"
                             style={{ height: "35px", backgroundColor: "#00a9dc" }}

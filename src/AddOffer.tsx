@@ -8,7 +8,7 @@ const AddOffer = () => {
         <>
             <section className="filter-sec offer-sec">
                 <Container>
-                    <Link to="/commodities" className="d-block bckbtn mb-3">
+                    <Link to="/filter" className="d-block bckbtn mb-3">
                         <Image className="icn-arrow--left d-inline" src={arrow} alt="Grey arrow down" />
                         <span className="d-inline ms-2">Back to the order board</span>
                     </Link>

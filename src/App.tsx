@@ -9,6 +9,8 @@ import Confirmation from "./LoginUser/Confirmation";
 import SignUp from "./LoginUser/SignUp";
 import TopHeader from "./header/TopHeader";
 import MainHeader from "./header/MainHeader";
+import ProductFilter from "./ProductFilter";
+import AddOffer from "./AddOffer";
 
 function App() {
     return (
@@ -18,6 +20,8 @@ function App() {
                     <Route index element={<Home />} />
                     <Route path="commodities" element={<Commodities />} />
                     <Route path="tools" element={<CropConverter />} />
+                    <Route path="filter" element={<ProductFilter />} />
+                    <Route path="new-offer" element={<AddOffer />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/forget" element={<ForgetPassword />} />

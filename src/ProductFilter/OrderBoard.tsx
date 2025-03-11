@@ -71,7 +71,9 @@ const OrderBoard = () => {
                                     <b>Medium Grain, Seed, Arborío</b>
                                 </span>
                             </label>
-                            <Button className="btn btn-primary outlinebtn ">Show All Deals</Button>
+                            <Link to="/deals">
+                                <Button className="btn btn-primary outlinebtn ">Show All Deals</Button>
+                            </Link>
                         </div>
                         <div className="col-md-3">
                             <Link className="products-index__buy__col" to="/">

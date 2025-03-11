@@ -11,6 +11,7 @@ import TopHeader from "./header/TopHeader";
 import MainHeader from "./header/MainHeader";
 import ProductFilter from "./ProductFilter";
 import AddOffer from "./AddOffer";
+import AllDeals from "./AllDeals";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                     <Route path="tools" element={<CropConverter />} />
                     <Route path="filter" element={<ProductFilter />} />
                     <Route path="new-offer" element={<AddOffer />} />
+                    <Route path="deals" element={<AllDeals />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/forget" element={<ForgetPassword />} />

@@ -76,7 +76,7 @@ const OrderBoard = () => {
                             </Link>
                         </div>
                         <div className="col-md-3">
-                            <Link className="products-index__buy__col" to="/">
+                            <Link className="products-index__buy__col" to="/bid">
                                 <div className="bid-sell-hover">
                                     <div>
                                         <p className="product-order__ppt_buy mb-0">€1.450</p>
@@ -106,7 +106,7 @@ const OrderBoard = () => {
                             </Link>
                         </div>
                         <div className="col-md-3">
-                            <Link className="products-index__sell__col" to="/">
+                            <Link className="products-index__sell__col" to="/bid">
                                 <div className="bid-sell-hover">
                                     <div>
                                         <p className="product-order__ppt_sell mb-0">€1.450</p>

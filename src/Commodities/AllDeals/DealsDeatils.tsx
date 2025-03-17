@@ -24,7 +24,7 @@ const DealsDeatils = () => {
                 <div className="filter-wrappper deals-wrapper">
                     <div className="row">
                         <div className="col-md-6">
-                            <Link to="/">
+                            <Link to="/bid">
                                 <h2 className="text-warning mb-4">Sell</h2>
                                 <div className="deal-card p-4 bg-white rounded shadow-sm">
                                     <div className="row">
@@ -93,7 +93,7 @@ const DealsDeatils = () => {
                         </div>
 
                         <div className="col-md-6">
-                            <Link to="/">
+                            <Link to="/bid">
                                 <h2 className="text-primary mb-4">Buy</h2>
                                 <div className="deal-card p-4 bg-white rounded shadow-sm">
                                     <div className="row">

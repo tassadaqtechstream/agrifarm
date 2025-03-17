@@ -1,6 +1,6 @@
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Image } from "react-bootstrap";
 import ricebanner from "../../assets/ricebanner.jpg";
-
+import remove from "../../assets/bi.png";
 const BidDeatils = () => {
     return (
         <>
@@ -15,7 +15,7 @@ const BidDeatils = () => {
                                 <span>Seller's rating</span>
                                 <span className="ms-auto">
                                     <a href="#" className="text-decoration-none text-muted">
-                                        Remove From List
+                                        <Image src={remove} /> Remove From List
                                     </a>
                                     <span className="ms-2">( Feedbacks )</span>
                                 </span>

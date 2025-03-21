@@ -13,6 +13,7 @@ import ProductFilter from "./ProductFilter";
 import AddOffer from "./AddOffer";
 import AllDeals from "./AllDeals";
 import Bidpage from "./Bidpage";
+import OurCompany from "./OurCompany";
 
 function App() {
     return (
@@ -26,6 +27,7 @@ function App() {
                     <Route path="new-offer" element={<AddOffer />} />
                     <Route path="deals" element={<AllDeals />} />
                     <Route path="bid" element={<Bidpage />} />
+                    <Route path="comapny" element={<OurCompany />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/forget" element={<ForgetPassword />} />

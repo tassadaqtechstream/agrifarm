@@ -1054,3 +1054,13 @@ label.required:after {
     color: #000;
     text-decoration: none;
 }
+.bicrop {
+    -webkit-filter: invert(60%);
+    filter: invert(60%);
+    max-height: 130px;
+}
+.bicrop {
+    max-width: 50%;
+    margin: auto;
+    display: block;
+}

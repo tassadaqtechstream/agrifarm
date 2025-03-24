@@ -64,7 +64,7 @@ export default function MainHeader() {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to="/mission" className="dropdown-item">
+                                    <Link to="/about" className="dropdown-item">
                                         Our People
                                     </Link>
                                 </li>

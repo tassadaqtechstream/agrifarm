@@ -115,6 +115,7 @@ img {
 .login-a {
     color: #fff;
     text-decoration: none;
+    margin-left: 10px;
 }
 .login-a img {
     margin: 0 4px 2px 0;
@@ -1043,4 +1044,65 @@ label.required:after {
 .offer-sec .btn-header {
     min-width: 245px;
     height: 54px;
+}
+.font-weight-bold {
+    font-weight: bold;
+}
+.deals-wrapper h3 {
+    font-family: "Open Sans", serif;
+}
+.deals-wrapper a {
+    color: #000;
+    text-decoration: none;
+}
+.bicrop {
+    -webkit-filter: invert(60%);
+    filter: invert(60%);
+    max-height: 130px;
+}
+.bicrop {
+    max-width: 50%;
+    margin: auto;
+    display: block;
+}
+.section-title {
+    color: #4caf50;
+    margin-bottom: 1.5rem;
+}
+
+.section-description {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.team-member {
+    padding: 1rem;
+}
+
+.team-member img {
+    border-radius: 8px;
+}
+
+.team-member h4 {
+    color: #333;
+    margin: 1rem 0 0.5rem;
+    font-size: 1.1rem;
+}
+
+.position {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.linkedin-link {
+    color: #4caf50;
+    font-size: 1.5rem;
+    text-decoration: none;
+}
+
+.linkedin-link:hover {
+    color: #4caf50;
+}
+.text-success {
+    color: #4caf50 !important;
 }

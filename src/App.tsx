@@ -11,6 +11,11 @@ import TopHeader from "./header/TopHeader";
 import MainHeader from "./header/MainHeader";
 import ProductFilter from "./ProductFilter";
 import AddOffer from "./AddOffer";
+import AllDeals from "./AllDeals";
+import Bidpage from "./Bidpage";
+import OurCompany from "./OurCompany";
+import OurPeople from "./OurPeople";
+import Faq from "./Faq";
 
 function App() {
     return (
@@ -22,6 +27,11 @@ function App() {
                     <Route path="tools" element={<CropConverter />} />
                     <Route path="filter" element={<ProductFilter />} />
                     <Route path="new-offer" element={<AddOffer />} />
+                    <Route path="deals" element={<AllDeals />} />
+                    <Route path="bid" element={<Bidpage />} />
+                    <Route path="comapny" element={<OurCompany />} />
+                    <Route path="about" element={<OurPeople />} />
+                    <Route path="faq" element={<Faq />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/forget" element={<ForgetPassword />} />

@@ -59,12 +59,12 @@ export default function MainHeader() {
                             </Link>
                             <ul className={`dropdown-menu dropdopwn-hover ${dropdownOpen ? "show" : ""}`}>
                                 <li>
-                                    <Link to="/team" className="dropdown-item">
+                                    <Link to="/comapny" className="dropdown-item">
                                         Our Company
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to="/mission" className="dropdown-item">
+                                    <Link to="/about" className="dropdown-item">
                                         Our People
                                     </Link>
                                 </li>

@@ -1,59 +1,77 @@
-import { useState, useEffect, JSX } from "react";
-
-interface TimeLeft {
-    days?: number;
-    hours?: number;
-    minutes?: number;
-    seconds?: number;
-}
+import React, { useState, useEffect } from 'react';
 
 interface OfferCountdownProps {
     expirationDate: string;
 }
 
-const OfferCountdown: React.FC<OfferCountdownProps> = ({ expirationDate }) => {
-    const calculateTimeLeft = () => {
-        const difference = +new Date(expirationDate) - +new Date();
-        let timeLeft: TimeLeft = {};
+interface TimeRemaining {
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+    total: number;
+}
 
-        if (difference > 0) {
-            timeLeft = {
-                days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                minutes: Math.floor((difference / 1000 / 60) % 60),
-                seconds: Math.floor((difference / 1000) % 60),
+const OfferCountdown: React.FC<OfferCountdownProps> = ({ expirationDate }) => {
+    const [timeRemaining, setTimeRemaining] = useState<TimeRemaining>({
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        total: 0
+    });
+
+    const calculateTimeRemaining = (): TimeRemaining => {
+        const difference = new Date(expirationDate).getTime() - new Date().getTime();
+
+        if (difference <= 0) {
+            return {
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                total: 0
             };
         }
 
-        return timeLeft;
+        return {
+            days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+            minutes: Math.floor((difference / 1000 / 60) % 60),
+            seconds: Math.floor((difference / 1000) % 60),
+            total: difference
+        };
     };
 
-    const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
-
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setTimeLeft(calculateTimeLeft());
-        }, 1000);
+        const updateTimer = (): void => {
+            setTimeRemaining(calculateTimeRemaining());
+        };
 
-        return () => clearTimeout(timer);
-    });
+        // Initial calculation
+        updateTimer();
 
-    const timerComponents: JSX.Element[] = [];
+        // Update every second
+        const timerId = setInterval(updateTimer, 1000);
 
-    Object.keys(timeLeft).forEach((interval) => {
-        if (!timeLeft[interval as keyof TimeLeft]) {
-            return;
-        }
+        return () => {
+            clearInterval(timerId);
+        };
+    }, [expirationDate]);
 
-        timerComponents.push(
-            <span key={interval}>
-                {timeLeft[interval as keyof TimeLeft]} {interval}{" "}
-            </span>
-        );
-    });
+    const formatNumber = (num: number): string => {
+        return num < 10 ? `0${num}` : num.toString();
+    };
+
+    if (timeRemaining.total <= 0) {
+        return <p className="text-danger">Expired</p>;
+    }
 
     return (
-        <p className="offer_countdown mb-0">{timerComponents.length ? timerComponents : <span>Offer expired</span>}</p>
+        <p className="countdown-timer">
+            {timeRemaining.days > 0 && `${timeRemaining.days}d `}
+            {formatNumber(timeRemaining.hours)}h {formatNumber(timeRemaining.minutes)}m {formatNumber(timeRemaining.seconds)}s
+        </p>
     );
 };
 

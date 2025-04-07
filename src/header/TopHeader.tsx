@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Container, Dropdown, Image } from "react-bootstrap";
 import { useState } from "react";
+import { useAuth } from "../context/AuthProvider"; // Import the auth hook
 
-// ✅ Import images from src/assets
+// Import images from src/assets
 import englishFlag from "../assets/english.svg";
 import arabicFlag from "../assets/english.svg";
 import userIcon from "../assets/user-i.png";
@@ -16,13 +17,22 @@ export default function TopHeader() {
     ];
 
     const [language, setLanguage] = useState<string>(languages[0].name);
-    const [isLoggedIn] = useState<boolean>(false);
 
-    // ✅ Correctly handle the selected language from the dropdown
+    // Use the auth context instead of local state
+    const { isAuthenticated, logout: handleLogout } = useAuth();
+    const navigate = useNavigate();
+
+    // Correctly handle the selected language from the dropdown
     const handleSelect = (eventKey: string | null) => {
         if (eventKey) {
             setLanguage(eventKey);
         }
+    };
+
+    // Handle logout action
+    const performLogout = () => {
+        handleLogout();
+        navigate('/login'); // Redirect to login page after logout
     };
 
     return (
@@ -52,23 +62,27 @@ export default function TopHeader() {
 
                     {/* Login & Signup */}
                     <div className="d-flex align-items-center header-right">
-                        {isLoggedIn ? (
+                        {isAuthenticated ? (
                             <>
-                                <Link to="/" className="login-a border-end pe-3 d-inline-block">
-                                    <Image src={userIcon} alt="Login Icon" width={13} height={17} />
+                                <Link to="/account" className="login-a border-end pe-3 d-inline-block">
+                                    <Image src={userIcon} alt="User Icon" width={13} height={17} />
                                     My Account
                                 </Link>
-                                <Link to="/" className="login-a border-end pe-3 d-inline-block">
+                                <Link to="/deals" className="login-a border-end pe-3 d-inline-block">
                                     My Deals
                                 </Link>
-                                <Link to="/" className="login-a border-end pe-3 d-inline-block">
-                                    <Image src={mail} alt="Login Icon" width={20} height={14} />
+                                <Link to="/notifications" className="login-a border-end pe-3 d-inline-block">
+                                    <Image src={mail} alt="Notification Icon" width={20} height={14} />
                                     Notification
                                 </Link>
-                                <Link to="/" className="login-a border-end pe-3 d-inline-block">
-                                    <Image src={logout} alt="Login Icon" width={16} height={16} />
+                                <button
+                                    onClick={performLogout}
+                                    className="login-a border-end pe-3 d-inline-block"
+                                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                                >
+                                    <Image src={logout} alt="Logout Icon" width={16} height={16} />
                                     Logout
-                                </Link>
+                                </button>
                             </>
                         ) : (
                             <>

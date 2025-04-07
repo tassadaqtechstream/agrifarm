@@ -1,4 +1,6 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthProvider";
 import Layout from "./Layout";
 import Home from "./Home";
 import Commodities from "./Commodities";
@@ -17,38 +19,40 @@ import OurCompany from "./OurCompany";
 import OurPeople from "./OurPeople";
 import Faq from "./Faq";
 
-function App() {
+const App: React.FC = () => {
     return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Layout />}>
-                    <Route index element={<Home />} />
-                    <Route path="commodities" element={<Commodities />} />
-                    <Route path="tools" element={<CropConverter />} />
-                    <Route path="filter" element={<ProductFilter />} />
-                    <Route path="new-offer" element={<AddOffer />} />
-                    <Route path="deals" element={<AllDeals />} />
-                    <Route path="bid" element={<Bidpage />} />
-                    <Route path="comapny" element={<OurCompany />} />
-                    <Route path="about" element={<OurPeople />} />
-                    <Route path="faq" element={<Faq />} />
-                </Route>
-                <Route path="/login" element={<Login />} />
-                <Route path="/forget" element={<ForgetPassword />} />
-                <Route path="/confirmation" element={<Confirmation />} />
-                <Route
-                    path="/signup"
-                    element={
-                        <>
-                            <TopHeader />
-                            <MainHeader />
-                            <SignUp />
-                        </>
-                    }
-                />
-            </Routes>
-        </Router>
+        <AuthProvider>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<Layout />}>
+                        <Route index element={<Home />} />
+                        <Route path="commodities" element={<Commodities />} />
+                        <Route path="tools" element={<CropConverter />} />
+                        <Route path="filter" element={<ProductFilter />} />
+                        <Route path="new-offer" element={<AddOffer />} />
+                        <Route path="deals" element={<AllDeals />} />
+                        <Route path="bid" element={<Bidpage />} />
+                        <Route path="comapny" element={<OurCompany />} />
+                        <Route path="about" element={<OurPeople />} />
+                        <Route path="faq" element={<Faq />} />
+                    </Route>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/forget" element={<ForgetPassword />} />
+                    <Route path="/confirmation" element={<Confirmation />} />
+                    <Route
+                        path="/signup"
+                        element={
+                            <>
+                                <TopHeader />
+                                <MainHeader />
+                                <SignUp />
+                            </>
+                        }
+                    />
+                </Routes>
+            </Router>
+        </AuthProvider>
     );
-}
+};
 
 export default App;

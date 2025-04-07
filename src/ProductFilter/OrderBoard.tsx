@@ -1,144 +1,111 @@
-import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import flag from "../assets/flag.svg";
-import OfferCountdown from "./OfferCountdown";
+import React from "react";
+import { Card, Col, Row, Badge, Spinner } from "react-bootstrap";
+import defaultProductImage from "../assets/placeholder.png"; // Add a default image
 
-const OrderBoard = () => {
-    return (
-        <>
-            <div className="filter-sdiebar">
-                <div className="mb-2 d-flex justify-content-between align-items-center">
-                    <h3 className="text-uppercase font-weight-bold">Order Board</h3>
+// Interface for product data - matches your backend response
+interface Product {
+    id: number;
+    name: string;
+    price: string;
+    weight: string;
+    incoterm: string;
+    country: string;
+    verified: boolean;
+    expirationDate: string;
+    apiData: {
+        id: number;
+        name: string;
+        slug: string;
+        description: string | null;
+        image_url: string | null;
+        commodity_id: number;
+        created_at: string;
+        updated_at: string;
+    };
+}
 
-                    <Link to="/new-offer">
-                        <Button
-                            className="btn btn-header  ms-0 border-0 btn btn-primary"
-                            style={{ height: "35px", backgroundColor: "#00a9dc" }}
-                        >
-                            Add new offer
-                        </Button>
-                    </Link>
-                </div>
-                <div className="filter-wrappper">
-                    <div className="filter-board-header d-flex justify-content-between align-items-center">
-                        <p className="mb-0">Results</p>
+interface OrderBoardProps {
+    products: Product[];
+    loading: boolean;
+}
 
-                        <div className="perpage-box d-flex align-items-center w-50 justify-content-end">
-                            <span>Show</span>
-                            <select className="form-control mx-2" style={{ width: "80px" }}>
-                                <option value="">10</option>
-                                <option value="">20</option>
-                                <option value="">30</option>
-                            </select>
-                            <span>Lines Per Page</span>
-                        </div>
-                    </div>
+const OrderBoard: React.FC<OrderBoardProps> = ({ products, loading }) => {
+    // Function to get image URL with fallback
+    const getImageUrl = (product: Product) => {
+        if (product.apiData?.image_url) {
+            // Check if the image URL is a relative path or full URL
+            if (product.apiData.image_url.startsWith('http')) {
+                return product.apiData.image_url;
+            } else {
+                // For relative paths, prepend the API base URL
+                return `${import.meta.env.VITE_API_URL || ''}/${product.apiData.image_url}`;
+            }
+        }
+        return defaultProductImage; // Fallback to default image
+    };
 
-                    <div className="row py-4">
-                        <div className="col-md-2">
-                            <label>
-                                <span
-                                    className="translation_missing"
-                                    title="translation missing: en.products.filter.commodities"
-                                >
-                                    Commodities
-                                </span>
-                            </label>
-                        </div>
-                        <div className="col-md-10 d-flex p-0">
-                            <div className="col-md-3">
-                                <label>
-                                    Bids by Buyers
-                                    <span className="products-index__list-info">(Currency per weight unit)</span>
-                                </label>
-                            </div>
-                            <div className="col-md-9">
-                                <label>
-                                    Offers by Sellers
-                                    <span className="products-index__list-info">(Currency per weight unit)</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="row py-4">
-                        <div className="col-md-3">
-                            <label className="mb-4">
-                                <span
-                                    className="translation_missing "
-                                    title="translation missing: en.products.filter.commodities"
-                                >
-                                    <b>Medium Grain, Seed, Arborío</b>
-                                </span>
-                            </label>
-                            <Link to="/deals">
-                                <Button className="btn btn-primary outlinebtn ">Show All Deals</Button>
-                            </Link>
-                        </div>
-                        <div className="col-md-3">
-                            <Link className="products-index__buy__col" to="/bid">
-                                <div className="bid-sell-hover">
-                                    <div>
-                                        <p className="product-order__ppt_buy mb-0">€1.450</p>
-                                        <p className="product-order__weight mb-0">1000.0 MT</p>
-                                        <p className="product-order__incoterm_country mb-0">
-                                            FCA UA
-                                            <img
-                                                className="bid_country_flag_image ms-2"
-                                                width="18"
-                                                src={flag}
-                                                alt="Ua"
-                                            />
-                                        </p>
-                                        <p className=" mb-0" style={{ textTransform: "uppercase" }}>
-                                            <small>Verified seller</small>
-                                        </p>
-                                        <p className=" mb-0">Expires in</p>
-                                        <OfferCountdown expirationDate="2025-03-18" />
-                                        <p className=" mb-0">
-                                            <i>Click for details</i>
-                                        </p>
-                                    </div>
-                                    <p className="bid-sell-hover__info mb-0">
-                                        <span className="info">Free Carrier Kyiv, Ukraine</span>
-                                    </p>
-                                </div>
-                            </Link>
-                        </div>
-                        <div className="col-md-3">
-                            <Link className="products-index__sell__col" to="/bid">
-                                <div className="bid-sell-hover">
-                                    <div>
-                                        <p className="product-order__ppt_sell mb-0">€1.450</p>
-                                        <p className="product-order__weight mb-0">1000.0 MT</p>
-                                        <p className="product-order__incoterm_country mb-0">
-                                            FCA UA
-                                            <img
-                                                className="bid_country_flag_image ms-2"
-                                                width="18"
-                                                src={flag}
-                                                alt="Ua"
-                                            />
-                                        </p>
-                                        <p className=" mb-0" style={{ textTransform: "uppercase" }}>
-                                            <small>Verified seller</small>
-                                        </p>
-                                        <p className=" mb-0">Expires in</p>
-                                        <OfferCountdown expirationDate="2025-03-18" />
-                                        <p className=" mb-0">
-                                            <i>Click for details</i>
-                                        </p>
-                                    </div>
-                                    <p className="bid-sell-hover__info mb-0">
-                                        <span className="info">Free Carrier Kyiv, Ukraine</span>
-                                    </p>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+    if (loading) {
+        return (
+            <div className="text-center py-5">
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+                <p className="mt-2">Loading products...</p>
             </div>
-        </>
+        );
+    }
+
+    if (!products || products.length === 0) {
+        return (
+            <div className="alert alert-info">
+                No products found matching your criteria. Try adjusting your filters.
+            </div>
+        );
+    }
+
+    return (
+        <div className="order-board">
+            <h4 className="mb-4">Available Products ({products.length})</h4>
+            <Row>
+                {products.map((product) => (
+                    <Col md={4} className="mb-4" key={product.id}>
+                        <Card className="product-card h-100">
+                            <div className="product-img-container">
+                                <img
+                                    src={getImageUrl(product)}
+                                    alt={product.name}
+                                    className="card-img-top product-img"
+                                    onError={(e) => {
+                                        // Fallback if image fails to load
+                                        (e.target as HTMLImageElement).src = defaultProductImage;
+                                    }}
+                                />
+                            </div>
+                            <Card.Body>
+                                <Card.Title>{product.name}</Card.Title>
+                                <div className="product-details">
+                                    <p className="price">€{product.price} / MT</p>
+                                    <p className="weight">Quantity: {product.weight}</p>
+                                    <p className="incoterm">
+                                        <Badge bg="secondary">{product.incoterm}</Badge>
+                                        <Badge bg="info" className="ms-2">{product.country}</Badge>
+                                    </p>
+                                    {product.verified && (
+                                        <Badge bg="success" className="verified-badge">
+                                            Verified
+                                        </Badge>
+                                    )}
+                                    <p className="expiration">
+                                        <small>Available until: {product.expirationDate}</small>
+                                    </p>
+                                </div>
+                                <button className="btn btn-primary mt-2 w-100">View Details</button>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                ))}
+            </Row>
+        </div>
     );
 };
 

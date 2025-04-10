@@ -1,5 +1,6 @@
 import { ElementType } from "react";
 import { Form } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 interface FormInputProps {
     label: string;
@@ -11,17 +12,22 @@ interface FormInputProps {
 }
 
 const FormInput = ({ label, type = "text", required, options, as, rows }: FormInputProps) => {
+    const { t } = useTranslation();
     const isSelect = type === "select";
 
     return (
         <Form.Group className="mb-3">
             <Form.Label>
                 {label}
-                {required && "*"}
+                {required && (
+                    <span className="text-danger ms-1" title={t("components.formInput.required")}>
+                        *
+                    </span>
+                )}
             </Form.Label>
             {isSelect ? (
                 <Form.Select className="form-control">
-                    <option>Select one</option>
+                    <option>{t("components.formInput.selectOne")}</option>
                     {options?.map((option, index) => (
                         <option key={index} value={option.value}>
                             {option.label}

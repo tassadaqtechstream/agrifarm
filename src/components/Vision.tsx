@@ -1,16 +1,14 @@
 import { Container } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 const Vision = () => {
+    const { t } = useTranslation();
+
     return (
-        <section className="text-center  our-solution-sec mt-3 pb-0">
+        <section className="text-center our-solution-sec mt-3 pb-0">
             <Container>
-                <h2 className="display-4 mb-4">
-                    OUR <span className="text-success">VISION</span>
-                </h2>
-                <p className="lead mb-0">
-                    Agri Marketplace's vision is to become the largest agricultural fair-trade platform, <br></br>{" "}
-                    connecting farmers to industrial all around the world.
-                </p>
+                <h2 className="display-4 mb-4">{t("components.vision.title")}</h2>
+                <p className="lead mb-0">{t("components.vision.description")}</p>
             </Container>
         </section>
     );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider";
 import Layout from "./Layout";
@@ -18,8 +18,21 @@ import Bidpage from "./Bidpage";
 import OurCompany from "./OurCompany";
 import OurPeople from "./OurPeople";
 import Faq from "./Faq";
+import TranslationTest from "./components/TranslationTest";
+import "./config/i18n"; // Import i18n configuration
+import "./App.css";
 
 const App: React.FC = () => {
+    useEffect(() => {
+        // Set initial language and direction
+        const savedLang = localStorage.getItem("i18nextLng") || "en";
+        document.documentElement.dir = savedLang === "ar" ? "rtl" : "ltr";
+        document.documentElement.lang = savedLang;
+
+        // Log the current language for debugging
+        console.log("Current language:", savedLang);
+    }, []);
+
     return (
         <AuthProvider>
             <Router>
@@ -35,6 +48,7 @@ const App: React.FC = () => {
                         <Route path="comapny" element={<OurCompany />} />
                         <Route path="about" element={<OurPeople />} />
                         <Route path="faq" element={<Faq />} />
+                        <Route path="test-translation" element={<TranslationTest />} />
                     </Route>
                     <Route path="/login" element={<Login />} />
                     <Route path="/forget" element={<ForgetPassword />} />

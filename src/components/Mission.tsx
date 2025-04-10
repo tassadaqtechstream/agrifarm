@@ -1,16 +1,14 @@
 import { Container } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 const Mission = () => {
+    const { t } = useTranslation();
+
     return (
         <section className="text-center  our-solution-sec">
             <Container>
-                <h2 className="display-4 mb-4">
-                    OUR <span className="text-success">MISSION</span>
-                </h2>
-                <p className="lead">
-                    Agri Marketplace's mission is to become THE global reference for DIGITAL agricultural food crop
-                    transactions<br></br> through a complete PLATFORM solution.
-                </p>
+                <h2 className="display-4 mb-4">{t("components.mission.title")}</h2>
+                <p className="lead">{t("components.mission.description")}</p>
             </Container>
         </section>
     );

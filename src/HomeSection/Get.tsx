@@ -1,33 +1,27 @@
 import { Link } from "react-router-dom";
 import { Col, Container, Row } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 const Get = () => {
+    const { t } = useTranslation();
+
     return (
         <>
             <section className="our-solution-sec bg-white text-center">
                 <Container className="px-5">
                     <div className="text-center text-holder mb-4">
-                        <h2>Get Started</h2>
-                        <p className="text-justify">
-                            We open the door to thousands of approved buyers and sellers. Post your crop bid as a
-                            registered buyer, or create your crop offer as a platform verified seller. Through our
-                            rigorous customer compliance we make sure that only reliable users gain access to our
-                            digital marketplace. There are two ways to get started:
-                        </p>
+                        <h2>{t("components.get.title")}</h2>
+                        <p className="text-justify">{t("components.get.description")}</p>
                     </div>
                     <Row>
                         <Col md={6}>
                             <div className="solution-box-text text-start ps-0">
-                                <h6 className="mb-3">Post offer as a seller</h6>
-                                <p className="mb-5">
-                                    As a seller, post offers for the agricultural crop you are looking to sell, and gain
-                                    immediate access to credit-verified buyers. Or simply react to an existing buyer’s
-                                    bid and start your transaction.
-                                </p>
+                                <h6 className="mb-3">{t("components.get.seller.title")}</h6>
+                                <p className="mb-5">{t("components.get.seller.description")}</p>
                                 <Row>
                                     <Col md={6}>
                                         <Link to="/signup" className="btn btn-primary outlinebtn w-100">
-                                            Register as a seller
+                                            {t("components.get.seller.button")}
                                         </Link>
                                     </Col>
                                 </Row>
@@ -35,16 +29,12 @@ const Get = () => {
                         </Col>
                         <Col md={6}>
                             <div className="solution-box-text text-start ps-0">
-                                <h6 className="mb-3">Post bid as a buyer</h6>
-                                <p className="mb-5">
-                                    As a buyer, post bids for the agricultural crop you are looking to buy. Communicate
-                                    to the market what you are looking for, and get rapid reactions from interested
-                                    farmers or sellers.
-                                </p>
+                                <h6 className="mb-3">{t("components.get.buyer.title")}</h6>
+                                <p className="mb-5">{t("components.get.buyer.description")}</p>
                                 <Row>
                                     <Col md={6}>
                                         <Link to="/signup" className="btn btn-primary outlinebtn w-100">
-                                            Register as a buyer
+                                            {t("components.get.buyer.button")}
                                         </Link>
                                     </Col>
                                 </Row>

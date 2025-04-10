@@ -1,5 +1,6 @@
 import { Container, Row, Col, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 // ✅ Import images from src/assets
 import phoneIcon from "../assets/phone.svg";
@@ -11,110 +12,86 @@ import twitterIcon from "../assets/twi.png";
 import youtubeIcon from "../assets/you.png";
 
 const Footer = () => {
+    const { t } = useTranslation();
+
+    const socialLinks = [
+        { icon: fbIcon, alt: "Facebook", url: "https://facebook.com/agrimp" },
+        { icon: instaIcon, alt: "Instagram", url: "https://instagram.com/agrimp" },
+        { icon: linkIcon, alt: "LinkedIn", url: "https://linkedin.com/company/agrimp" },
+        { icon: twitterIcon, alt: "Twitter", url: "https://twitter.com/agrimp" },
+        { icon: youtubeIcon, alt: "YouTube", url: "https://youtube.com/agrimp" },
+    ];
+
     return (
         <footer className="footer">
             <div className="footer-top">
                 <Container>
                     <Row>
                         <Col xs={6} md={3} lg={3} className="footer-links">
-                            <h4>Menu</h4>
+                            <h4>{t("footer.menu.title")}</h4>
                             <ul>
                                 <li>
-                                    <Link to="/">Home</Link>
+                                    <Link to="/">{t("header.home")}</Link>
                                 </li>
                                 <li>
-                                    <Link to="/">Market</Link>
+                                    <Link to="/market">{t("header.market")}</Link>
                                 </li>
                                 <li>
-                                    <Link to="/">Crop Converter</Link>
+                                    <Link to="/tools">{t("header.cropConverter")}</Link>
                                 </li>
                             </ul>
                         </Col>
                         <Col xs={6} md={3} lg={3} className="footer-links">
-                            <h4>About</h4>
+                            <h4>{t("footer.about.title")}</h4>
                             <ul>
                                 <li>
-                                    <Link to="/">Our Company</Link>
+                                    <Link to="/comapny">{t("header.ourCompany")}</Link>
                                 </li>
                                 <li>
-                                    <Link to="/">Our People</Link>
+                                    <Link to="/about">{t("header.ourPeople")}</Link>
                                 </li>
                                 <li>
-                                    <Link to="/">FAQ&apos;s</Link>
+                                    <Link to="/faq">{t("header.faq")}</Link>
                                 </li>
                             </ul>
                         </Col>
                         <Col xs={6} md={3} lg={3} className="footer-links">
-                            <h4>Legal</h4>
+                            <h4>{t("footer.legal.title")}</h4>
                             <ul>
                                 <li>
-                                    <Link to="/">Terms &amp; Conditions</Link>
+                                    <Link to="/terms">{t("footer.legal.terms")}</Link>
                                 </li>
                                 <li>
-                                    <Link to="/">Privacy Policy</Link>
+                                    <Link to="/privacy">{t("footer.legal.privacy")}</Link>
                                 </li>
                                 <li>
-                                    <Link to="/">Cookies Policy</Link>
+                                    <Link to="/cookies">{t("footer.legal.cookies")}</Link>
                                 </li>
                             </ul>
                         </Col>
                         <Col xs={6} md={3} lg={3} className="footer-contact footer-links">
-                            <h4>Contact Us</h4>
+                            <h4>{t("footer.contact.title")}</h4>
                             <p>
-                                <Image src={phoneIcon} alt="Phone icon" width={14} height={14} />
-                                <Link className="strong" to="/">
+                                <Image src={phoneIcon} alt={t("footer.contact.phone")} width={14} height={14} />
+                                <Link className="strong" to="tel:+351964300963">
                                     +351 964 300 963
                                 </Link>
                                 <br />
-                                <Image src={mailIcon} alt="Mail icon" width={14} height={12} />
-                                <Link to="/"> info@agrimp.com </Link>
+                                <Image src={mailIcon} alt={t("footer.contact.email")} width={14} height={12} />
+                                <Link to="mailto:info@agrimp.com"> info@agrimp.com </Link>
                             </p>
-                            <div className="mt-3">
-                                <Link to="/" target="_blank" className="facebook">
-                                    <Image
-                                        className="footer-image"
-                                        src={fbIcon}
-                                        alt="Facebook"
-                                        width={20}
-                                        height={20}
-                                    />
-                                </Link>
-                                <Link to="/" target="_blank">
-                                    <Image
-                                        className="footer-image"
-                                        src={instaIcon}
-                                        alt="Instagram"
-                                        width={20}
-                                        height={20}
-                                    />
-                                </Link>
-                                <Link to="/" target="_blank">
-                                    <Image
-                                        className="footer-image"
-                                        src={linkIcon}
-                                        alt="LinkedIn"
-                                        width={20}
-                                        height={20}
-                                    />
-                                </Link>
-                                <Link to="/" target="_blank">
-                                    <Image
-                                        className="footer-image"
-                                        src={twitterIcon}
-                                        alt="Twitter"
-                                        width={20}
-                                        height={20}
-                                    />
-                                </Link>
-                                <Link to="/" target="_blank">
-                                    <Image
-                                        className="footer-image"
-                                        src={youtubeIcon}
-                                        alt="YouTube"
-                                        width={20}
-                                        height={20}
-                                    />
-                                </Link>
+                            <div className="social-links">
+                                {socialLinks.map((social, index) => (
+                                    <Link key={index} to={social.url} target="_blank" rel="noopener noreferrer">
+                                        <Image
+                                            className="footer-image"
+                                            src={social.icon}
+                                            alt={social.alt}
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </Link>
+                                ))}
                             </div>
                         </Col>
                     </Row>
@@ -123,7 +100,9 @@ const Footer = () => {
             <div className="container footer-bottom clearfix">
                 <Row>
                     <Col lg={12} md={12} className="text-center mt-4 mb-4">
-                        <span className="text-secondary">©2025, Green Oasis AG MarketPlace - All rights Reserved</span>
+                        <span className="text-secondary">
+                            {t("footer.copyright", { year: new Date().getFullYear() })}
+                        </span>
                     </Col>
                 </Row>
             </div>

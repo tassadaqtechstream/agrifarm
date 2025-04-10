@@ -1,5 +1,7 @@
+import React from "react";
 import { Container, Row, Col, Button, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 // ✅ Import images from src/assets
 import fbIcon from "../assets/fb.png";
@@ -13,26 +15,20 @@ import grains2 from "../assets/grans-2.png";
 import grains3 from "../assets/grans-3.png";
 import grains4 from "../assets/grans-4.png";
 
-const Hero = () => {
+const Hero: React.FC = () => {
+    const { t } = useTranslation();
+
     return (
         <section className="hero-section text-white p-0">
             <Container>
                 <Row>
                     <Col md={8}>
                         <div className="hero-content-left">
-                            <h1>
-                                Empowering businesses and customers to source fresh, high-quality produce directly from
-                                farmers. Our integrated ERP-powered marketplace ensures transparency, efficiency, and
-                                sustainability in every transaction. “The Future of Agri-Commerce , Green Oasis AG
-                                MarketPlace"
-                            </h1>
-                            <h2 className="text-white my-5">
-                                Seamless Farm-to-Market Access – Farmers list their produce effortlessly while
-                                businesses source high-quality agri-products with real-time data.
-                            </h2>
+                            <h1>{t("home.hero.title")}</h1>
+                            <h2 className="text-white my-5">{t("home.hero.subtitle")}</h2>
                             <div className="hero-footer d-flex align-items-center justify-content-between pe-4">
                                 <Link to="/signup" className="btn btn-header btn-white">
-                                    Join Now
+                                    {t("home.hero.joinNow")}
                                 </Link>
                                 <ul className="d-flex m-0 p-0">
                                     <li className="ms-2">
@@ -67,7 +63,7 @@ const Hero = () => {
 
                     <Col md={4} className="hero-content-right">
                         <div className="hero-content-right-inner text-center text-uppercase">
-                            <h3>Select a product to buy/sell</h3>
+                            <h3>{t("home.hero.selectProduct")}</h3>
                             <div className="product-card">
                                 <Link to="/commodities" className="product-card-link">
                                     <div className="circle-white">
@@ -79,7 +75,7 @@ const Hero = () => {
                                             height={74}
                                         />
                                     </div>
-                                    <p>Grains</p>
+                                    <p>{t("home.hero.grains")}</p>
                                 </Link>
                                 <Link to="/commodities" className="product-card-link">
                                     <div className="circle-white">
@@ -91,7 +87,7 @@ const Hero = () => {
                                             height={74}
                                         />
                                     </div>
-                                    <p>Nuts</p>
+                                    <p>{t("home.hero.nuts")}</p>
                                 </Link>
                                 <Link to="/commodities" className="product-card-link">
                                     <div className="circle-white">
@@ -103,7 +99,7 @@ const Hero = () => {
                                             height={74}
                                         />
                                     </div>
-                                    <p>Green Coffee</p>
+                                    <p>{t("home.hero.fruits")}</p>
                                 </Link>
                                 <Link to="/commodities" className="product-card-link">
                                     <div className="circle-white">
@@ -115,12 +111,12 @@ const Hero = () => {
                                             height={74}
                                         />
                                     </div>
-                                    <p>Olive Oil & Other Oils</p>
+                                    <p>{t("home.hero.vegetables")}</p>
                                 </Link>
                             </div>
 
                             <div style={{ marginTop: "40px" }}>
-                                <h6 className="mb-3">Can&apos;t find the Product you are looking for?</h6>
+                                <h6 className="mb-3">{t("home.hero.cantFindProduct")}</h6>
                                 <Button className="btn btn-header btn-white px-5">Talk to us</Button>
                             </div>
                         </div>

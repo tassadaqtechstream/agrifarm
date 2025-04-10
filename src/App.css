@@ -1106,3 +1106,45 @@ label.required:after {
 .text-success {
     color: #4caf50 !important;
 }
+
+/* RTL Support */
+[dir="rtl"] {
+    text-align: right;
+}
+
+[dir="rtl"] .me-2 {
+    margin-right: 0 !important;
+    margin-left: 0.5rem !important;
+}
+
+[dir="rtl"] .pe-3 {
+    padding-right: 0 !important;
+    padding-left: 1rem !important;
+}
+
+[dir="rtl"] .border-end {
+    border-right: none !important;
+    border-left: 1px solid #dee2e6 !important;
+}
+
+[dir="rtl"] .header-right {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .dropdown-menu {
+    text-align: right;
+}
+
+[dir="rtl"] .justify-content-between {
+    flex-direction: row-reverse;
+}
+
+/* Font support for Arabic */
+@font-face {
+    font-family: "Cairo";
+    src: url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap");
+}
+
+[dir="rtl"] body {
+    font-family: "Cairo", sans-serif;
+}

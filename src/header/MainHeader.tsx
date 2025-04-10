@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Container, Image } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import logoImg from "../assets/logo.png";
 
 export default function MainHeader() {
     const [isOpen, setIsOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const location = useLocation();
+    const { t } = useTranslation();
 
     return (
         <Container>
@@ -28,7 +30,7 @@ export default function MainHeader() {
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item">
                             <Link className={`nav-link ${location.pathname === "/" ? "active" : ""}`} to="/">
-                                Home
+                                {t("header.home")}
                             </Link>
                         </li>
                         <li className="nav-item">
@@ -36,12 +38,12 @@ export default function MainHeader() {
                                 className={`nav-link ${location.pathname === "/commodities" ? "active" : ""}`}
                                 to="/commodities"
                             >
-                                Market
+                                {t("header.market")}
                             </Link>
                         </li>
                         <li className="nav-item">
                             <Link className={`nav-link ${location.pathname === "/tools" ? "active" : ""}`} to="/tools">
-                                Crop Converter
+                                {t("header.cropConverter")}
                             </Link>
                         </li>
                         <li
@@ -55,22 +57,22 @@ export default function MainHeader() {
                                 role="button"
                                 aria-expanded={dropdownOpen}
                             >
-                                About us
+                                {t("header.aboutUs")}
                             </Link>
                             <ul className={`dropdown-menu dropdopwn-hover ${dropdownOpen ? "show" : ""}`}>
                                 <li>
                                     <Link to="/comapny" className="dropdown-item">
-                                        Our Company
+                                        {t("header.ourCompany")}
                                     </Link>
                                 </li>
                                 <li>
                                     <Link to="/about" className="dropdown-item">
-                                        Our People
+                                        {t("header.ourPeople")}
                                     </Link>
                                 </li>
                                 <li>
                                     <Link to="/faq" className="dropdown-item">
-                                        FAQ
+                                        {t("header.faq")}
                                     </Link>
                                 </li>
                             </ul>

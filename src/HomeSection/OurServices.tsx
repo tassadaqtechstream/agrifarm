@@ -1,24 +1,24 @@
 import { Container, Image } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 // ✅ Import the image from src/assets
 import serviceImage from "../assets/service.png";
 
 const OurServices = () => {
+    const { t } = useTranslation();
+
     return (
         <section className="our-solution-sec">
             <Container>
                 <div className="text-center text-holder mb-4">
                     <h2>
-                        Our <span>Services</span>
+                        {t("components.ourServices.title")} <span>{t("components.ourServices.titleSpan")}</span>
                     </h2>
-                    <p>
-                        Green Oasis AG MarketPlace provides all of the following services through internal operations in
-                        combination with our specialized partnership network.
-                    </p>
+                    <p>{t("components.ourServices.description")}</p>
                 </div>
 
                 <div className="text-center OurServices-img">
-                    <Image src={serviceImage} alt="solution" width={200} height={200} />
+                    <Image src={serviceImage} alt={t("components.ourServices.imageAlt")} width={200} height={200} />
                 </div>
             </Container>
         </section>

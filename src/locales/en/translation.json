@@ -1,0 +1,23 @@
+{
+    "home": {
+        "services": {
+            "title": "Our Services",
+            "farmers": {
+                "title": "For Farmers",
+                "description": "Connect directly with businesses and get better prices for your produce"
+            },
+            "businesses": {
+                "title": "For Businesses",
+                "description": "Source fresh produce directly from verified farmers at competitive prices"
+            },
+            "quality": {
+                "title": "Quality Assured",
+                "description": "All products are verified for quality and freshness"
+            },
+            "transparency": {
+                "title": "Transparent Pricing",
+                "description": "Fair and transparent pricing for all stakeholders"
+            }
+        }
+    }
+}

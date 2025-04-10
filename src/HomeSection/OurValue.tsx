@@ -1,19 +1,18 @@
 import { Container } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 const OurValue = () => {
+    const { t } = useTranslation();
+
     return (
         <>
             <section className="our-solution-sec bg-white text-center">
                 <Container>
                     <div className="text-center text-holder mb-4">
                         <h2>
-                            Our <span>value</span> proposition
+                            {t("components.ourValue.title")} <span>{t("components.ourValue.titleSpan")}</span>
                         </h2>
-                        <p>
-                            Green Oasis AG MarketPlace accommodates direct transactions between buyers and sellers. All
-                            intermediate supply chain stages are covered by Agri MP and our partnership network. See our
-                            premium partners for more information.
-                        </p>
+                        <p>{t("components.ourValue.description")}</p>
                     </div>
                     <div className="video-wrapper">
                         <video

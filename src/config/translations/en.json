@@ -1,0 +1,344 @@
+{
+    "header": {
+        "login": "Login",
+        "signup": "Sign Up",
+        "myAccount": "My Account",
+        "myDeals": "My Deals",
+        "notifications": "Notification",
+        "logout": "Logout",
+        "home": "Home",
+        "market": "Market",
+        "cropConverter": "Crop Converter",
+        "aboutUs": "About Us",
+        "ourCompany": "Our Company",
+        "ourPeople": "Our People",
+        "faq": "FAQ"
+    },
+    "footer": {
+        "menu": {
+            "title": "Menu"
+        },
+        "about": {
+            "title": "About"
+        },
+        "legal": {
+            "title": "Legal",
+            "terms": "Terms & Conditions",
+            "privacy": "Privacy Policy",
+            "cookies": "Cookies Policy"
+        },
+        "contact": {
+            "title": "Contact Us",
+            "phone": "Phone",
+            "email": "Email"
+        },
+        "copyright": "©{{year}}, Green Oasis AG MarketPlace - All rights Reserved"
+    },
+    "home": {
+        "welcome": "Welcome to AgriFarm",
+        "findProducts": "Find Products",
+        "search": "Search",
+        "categories": "Categories",
+        "featuredProducts": "Featured Products",
+        "viewAll": "View All",
+        "hero": {
+            "title": "Empowering businesses and customers to source fresh, high-quality produce directly from farmers. Our integrated ERP-powered marketplace ensures transparency, efficiency, and sustainability in every transaction. \"The Future of Agri-Commerce , Green Oasis AG MarketPlace\"",
+            "subtitle": "Seamless Farm-to-Market Access – Farmers list their produce effortlessly while businesses source high-quality agri-products with real-time data.",
+            "joinNow": "Join Now",
+            "selectProduct": "Select a product to buy/sell",
+            "grains": "Grains",
+            "nuts": "Nuts",
+            "fruits": "Fruits",
+            "vegetables": "Vegetables"
+        },
+        "ourSolution": {
+            "title": "Our Solution",
+            "description": "We provide a comprehensive solution for agricultural trading"
+        },
+        "ourValue": {
+            "title": "Our Value",
+            "description": "We create value for farmers and businesses"
+        },
+        "howItWorks": {
+            "title": "How It Works",
+            "description": "Our platform connects farmers directly with businesses"
+        },
+        "get": {
+            "title": "Get Started",
+            "description": "Join our platform today"
+        },
+        "ourServices": {
+            "title": "Our Services",
+            "description": "We offer a range of services for agricultural trading"
+        },
+        "premiumPartners": {
+            "title": "Premium Partners",
+            "description": "We work with leading agricultural companies"
+        },
+        "key": {
+            "title": "Key Features",
+            "description": "Discover what makes our platform unique"
+        },
+        "feedback": {
+            "title": "Customer Feedback",
+            "description": "See what our customers say about us"
+        }
+    },
+    "common": {
+        "loading": "Loading...",
+        "error": "Error",
+        "success": "Success",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "submit": "Submit"
+    },
+    "commodities": {
+        "cantFind": "Can't find the Product you are looking for?",
+        "talkToUs": "Talk to us",
+        "grains": "Grains",
+        "nuts": "Nuts",
+        "coffee": "Green Coffee",
+        "oils": "Olive Oil & Other Oils",
+        "rice": "Rice",
+        "wheat": "Wheat",
+        "corn": "Corn",
+        "barley": "Barley",
+        "almonds": "Almonds",
+        "cashews": "Cashews",
+        "walnuts": "Walnuts",
+        "pistachios": "Pistachios",
+        "peanuts": "Peanuts",
+        "arabica": "Arabica",
+        "robusta": "Robusta",
+        "liberica": "Liberica",
+        "excelsa": "Excelsa",
+        "olive-oil": "Olive Oil",
+        "coconut-oil": "Coconut Oil",
+        "sunflower-oil": "Sunflower Oil",
+        "canola-oil": "Canola Oil",
+        "sesame-oil": "Sesame Oil"
+    },
+    "converter": {
+        "title": "Crop Converter",
+        "product": "Product",
+        "pricePerUnit": "Price / Unit",
+        "currency": "Currency",
+        "euro": "Euro",
+        "usd": "USD",
+        "quantity": "Quantity",
+        "unit": "Unit",
+        "totalPrice": "Total Price",
+        "convert": "Convert",
+        "products": {
+            "almond": "Almond",
+            "hazelnut": "Hazelnut",
+            "triticale": "Triticale",
+            "barley": "Barley",
+            "rice": "Rice",
+            "wheat": "Wheat",
+            "cashew": "Cashew",
+            "peanut": "Peanut",
+            "specialtyCoffee": "Specialty Coffee",
+            "walnut": "Walnut",
+            "oliveOil": "Olive Oil",
+            "cocoa": "Cocoa",
+            "coffee": "Coffee",
+            "pistachio": "Pistachio",
+            "pineNut": "Pine Nut",
+            "refinedSunflowerOil": "Refined Sunflower Oil"
+        },
+        "units": {
+            "metricTon": "Metric Ton",
+            "pound": "Pound",
+            "kilograms": "Kilograms"
+        }
+    },
+    "components": {
+        "team": {
+            "title": "Our Team",
+            "description": "Meet our dedicated team of professionals",
+            "viewProfile": "View Profile"
+        },
+        "mission": {
+            "title": "Our Mission",
+            "description": "To revolutionize agricultural trading through technology"
+        },
+        "vision": {
+            "title": "Our Vision",
+            "description": "To be the leading agricultural trading platform globally"
+        },
+        "focus": {
+            "title": "Our Focus",
+            "description": "We focus on sustainable agricultural practices"
+        },
+        "bcorporation": {
+            "title": "B Corporation",
+            "description": "Certified for meeting high standards of social and environmental performance"
+        },
+        "knowYourCustomer": {
+            "title": "KNOW-YOUR-CUSTOMER",
+            "description": "Know-Your-Customer (KYC) is the process we use to verify the identity and origin of finance of users in our digital market place. Thus, preventing any money laundering and the financing of terrorist activities over our platform, whilst creating a network with only trustworthy agricultural buyers and sellers.",
+            "sellersTitle": "KYC FOR SELLERS",
+            "sellersDescription": "Seller accounts are verified by Agri MP and our partners. They are responsible for reviewing the company's registration document, proof of I.D. and user residence, and proof of company IBAN issues by that seller's bank.",
+            "buyersTitle": "KYC FOR BUYERS",
+            "buyersDescription": "Buyer accounts are verified by Agri MP and our partners. The buyer KYC process is equal to the seller's, but is not mandatory unless the buyer want to retract funds from his Agri MP wallet.",
+            "learnMore": "Learn More"
+        },
+        "formInput": {
+            "required": "Required",
+            "optional": "Optional",
+            "submit": "Submit",
+            "cancel": "Cancel",
+            "selectOne": "Select one"
+        },
+        "ourSolution": {
+            "title": "Our",
+            "titleSpan": "solution",
+            "description": "Green Oasis AG MarketPlace is a digital B2B market solution that brings together Farmers and Industrial Buyers.",
+            "imageAlt": "Our Solution",
+            "mainText": "We drive agricultural transactions through our digital platform in combination with our service partnership network. Green Oasis AG MarketPlace accommodates online payments between buyer and seller, product quality check options, and end-to-end logistic services.",
+            "notice": "Green Oasis AG MarketPlace does not buy or sell crops and is not a broker. Instead, we offer you the ability to effortlessly market your crop via our platform.",
+            "exploreMarketplace": "Explore the marketplace",
+            "learnMore": "Learn more about us",
+            "features": {
+                "marketOpportunities": {
+                    "title": "Market Opportunities",
+                    "description": "A user-friendly platform that generates market opportunity for farmers and industry buyers."
+                },
+                "globalMarket": {
+                    "title": "Global Market Access",
+                    "description": "Unlimited access to a global market from anywhere, at any time."
+                },
+                "transparency": {
+                    "title": "Transparency & Reliability",
+                    "description": "Transparent and reliable market information, deal creation, and negotiation."
+                },
+                "securePayments": {
+                    "title": "Secure Payments",
+                    "description": "Integrated and secure platform payment processes."
+                },
+                "qualityLogistics": {
+                    "title": "Quality & Logistics",
+                    "description": "Tailored product quality verification and logistic services."
+                },
+                "verifiedUsers": {
+                    "title": "Verified Buyers & Sellers",
+                    "description": "A market with only verified buyers and sellers."
+                },
+                "customerSupport": {
+                    "title": "Customer Support",
+                    "description": "Customer support & insight."
+                }
+            }
+        },
+        "ourValue": {
+            "title": "Our",
+            "titleSpan": "value proposition",
+            "description": "Green Oasis AG MarketPlace accommodates direct transactions between buyers and sellers. All intermediate supply chain stages are covered by Agri MP and our partnership network. See our premium partners for more information."
+        },
+        "howItWorks": {
+            "title": "How",
+            "titleSpan": "it works",
+            "subtitle": "Take a look at our",
+            "subtitleSpan": "platform demo",
+            "steps": {
+                "signup": "Sign-up to the platform",
+                "createOffer": "Create your offer or bid",
+                "setQuantity": "Set a quantity & price",
+                "provideDetails": "Provide us with crop characteristics & details",
+                "incoterm": "Decide upon your preferred incoterm",
+                "services": "Decide upon logistic and/or crop quality check services",
+                "post": "Post your seller offer or buyer bid",
+                "stayUpdated": "Stay updated by email or notification centre"
+            }
+        },
+        "get": {
+            "title": "Get Started",
+            "description": "We open the door to thousands of approved buyers and sellers. Post your crop bid as a registered buyer, or create your crop offer as a platform verified seller. Through our rigorous customer compliance we make sure that only reliable users gain access to our digital marketplace. There are two ways to get started:",
+            "seller": {
+                "title": "Post offer as a seller",
+                "description": "As a seller, post offers for the agricultural crop you are looking to sell, and gain immediate access to credit-verified buyers. Or simply react to an existing buyer's bid and start your transaction.",
+                "button": "Register as a seller"
+            },
+            "buyer": {
+                "title": "Post bid as a buyer",
+                "description": "As a buyer, post bids for the agricultural crop you are looking to buy. Communicate to the market what you are looking for, and get rapid reactions from interested farmers or sellers.",
+                "button": "Register as a buyer"
+            }
+        },
+        "ourServices": {
+            "title": "Our",
+            "titleSpan": "Services",
+            "description": "Green Oasis AG MarketPlace provides all of the following services through internal operations in combination with our specialized partnership network.",
+            "imageAlt": "Our Services"
+        },
+        "premiumPartners": {
+            "title": "Premium",
+            "titleSpan": "Partners",
+            "partners": {
+                "sgs": {
+                    "name": "SGS",
+                    "service": "Quality Certification",
+                    "type": "Premium Partner"
+                },
+                "orey": {
+                    "name": "Orey Shipping",
+                    "service": "Logistics & Transportation",
+                    "type": "Premium Partner"
+                },
+                "cca": {
+                    "name": "CCA Law Firm",
+                    "service": "Legal Services",
+                    "type": "Premium Partner"
+                },
+                "mangopay": {
+                    "name": "Mangopay",
+                    "service": "Payments",
+                    "type": "Premium Partner"
+                }
+            }
+        },
+        "key": {
+            "title": "Key",
+            "titleSpan": "Features",
+            "description": "Discover how Green Oasis AG MarketPlace can benefit you and all other food supply chain actors.",
+            "features": {
+                "transparency": {
+                    "title": "Transparency",
+                    "description": "Direct transactions between farmers and industry/retail"
+                },
+                "fairTrade": {
+                    "title": "Fairtrade",
+                    "description": "Redistribution of value in food supply chain"
+                },
+                "userFriendly": {
+                    "title": "User Friendly",
+                    "description": "Reduce costs to buyers without losing reliability"
+                },
+                "foodTraceability": {
+                    "title": "Food Traceability",
+                    "description": "Crop reliability through supply chain traceability (coming soon)"
+                }
+            }
+        },
+        "feedback": {
+            "title": "What",
+            "titleSpan": "People Say",
+            "description": "Discover how Green Oasis AG MarketPlace can benefit you and all other food supply chain actors.",
+            "testimonials": {
+                "testimonial1": {
+                    "name": "Christine Bonnet",
+                    "position": "Commercial Attaché | Coopenoix",
+                    "text": "Practical to use and very clear platform with a sober but effective design. I recommend."
+                },
+                "testimonial2": {
+                    "name": "Christine Bonnet",
+                    "position": "Commercial Attaché | Coopenoix",
+                    "text": "Practical to use and very clear platform with a sober but effective design. I recommend."
+                }
+            }
+        }
+    }
+}

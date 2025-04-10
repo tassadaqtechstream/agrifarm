@@ -1,47 +1,68 @@
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { Form } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 const ConverterComponent = () => {
+    const { t } = useTranslation();
+
+    // Product options with their translation keys
+    const productOptions = [
+        { value: "almond", label: t("converter.products.almond") },
+        { value: "hazelnut", label: t("converter.products.hazelnut") },
+        { value: "triticale", label: t("converter.products.triticale") },
+        { value: "barley", label: t("converter.products.barley") },
+        { value: "rice", label: t("converter.products.rice") },
+        { value: "wheat", label: t("converter.products.wheat") },
+        { value: "cashew", label: t("converter.products.cashew") },
+        { value: "peanut", label: t("converter.products.peanut") },
+        { value: "specialtyCoffee", label: t("converter.products.specialtyCoffee") },
+        { value: "walnut", label: t("converter.products.walnut") },
+        { value: "oliveOil", label: t("converter.products.oliveOil") },
+        { value: "cocoa", label: t("converter.products.cocoa") },
+        { value: "coffee", label: t("converter.products.coffee") },
+        { value: "pistachio", label: t("converter.products.pistachio") },
+        { value: "pineNut", label: t("converter.products.pineNut") },
+        { value: "refinedSunflowerOil", label: t("converter.products.refinedSunflowerOil") },
+    ];
+
+    // Unit options with their translation keys
+    const unitOptions = [
+        { value: "metricTon", label: t("converter.units.metricTon") },
+        { value: "pound", label: t("converter.units.pound") },
+        { value: "kilograms", label: t("converter.units.kilograms") },
+    ];
+
     return (
         <>
             <section className="converter-section">
                 <Container>
                     <div className="text-center text-holder mb-5">
                         <h2>
-                            <span>Crop Converter</span>
+                            <span>{t("converter.title")}</span>
                         </h2>
                     </div>
                     <div className="calculator-container mx-auto w-100 ">
                         <div className="top-calculator">
                             <Row className="align-items-center">
                                 <Col md={3}>
-                                    <Form.Label className="text-uppercase text-center d-block mb-0">Product</Form.Label>
+                                    <Form.Label className="text-uppercase text-center d-block mb-0">
+                                        {t("converter.product")}
+                                    </Form.Label>
                                 </Col>
                                 <Col md={9}>
                                     <Form.Select className="form-control" aria-label="Default select example">
-                                        <option>Almond</option>
-                                        <option>Hazelnut</option>
-                                        <option>Triticale</option>
-                                        <option>Barley</option>
-                                        <option>Rice</option>
-                                        <option>Wheat</option>
-                                        <option>Cashew</option>
-                                        <option>Peanut</option>
-                                        <option>Specialty Coffee</option>
-                                        <option>Walnut</option>
-                                        <option>Olive Oil</option>
-                                        <option>Cocoa</option>
-                                        <option>Coffee</option>
-                                        <option>Pistachio</option>
-                                        <option>Pine Nut</option>
-                                        <option>Refined Sunflower Oil</option>
+                                        {productOptions.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
                                     </Form.Select>
                                 </Col>
                             </Row>
                             <Row className="align-items-center">
                                 <Col md={3}>
                                     <Form.Label className="text-uppercase text-center d-block mb-0">
-                                        Price / Unit
+                                        {t("converter.pricePerUnit")}
                                     </Form.Label>
                                 </Col>
                                 <Col md={3}>
@@ -50,20 +71,20 @@ const ConverterComponent = () => {
 
                                 <Col md={2}>
                                     <Form.Label className="text-uppercase text-center d-block mb-0">
-                                        Currency
+                                        {t("converter.currency")}
                                     </Form.Label>
                                 </Col>
 
                                 <Col md={2}>
                                     <label className="container-checkbox">
-                                        Euro
+                                        {t("converter.euro")}
                                         <input name="radio" type="radio" defaultChecked={true} />
                                         <span className="checkmark"></span>
                                     </label>
                                 </Col>
                                 <Col md={2}>
                                     <label className="container-checkbox">
-                                        USD
+                                        {t("converter.usd")}
                                         <input name="radio" type="radio" />
                                         <span className="checkmark"></span>
                                     </label>
@@ -73,7 +94,7 @@ const ConverterComponent = () => {
                             <Row className="align-items-center">
                                 <Col md={3}>
                                     <Form.Label className="text-uppercase text-center d-block mb-0">
-                                        Quantity
+                                        {t("converter.quantity")}
                                     </Form.Label>
                                 </Col>
                                 <Col md={3}>
@@ -81,13 +102,17 @@ const ConverterComponent = () => {
                                 </Col>
 
                                 <Col md={2}>
-                                    <Form.Label className="text-uppercase text-center d-block mb-0">Unit</Form.Label>
+                                    <Form.Label className="text-uppercase text-center d-block mb-0">
+                                        {t("converter.unit")}
+                                    </Form.Label>
                                 </Col>
                                 <Col md={4}>
                                     <Form.Select className="form-control" aria-label="Default select example">
-                                        <option>Metric Ton</option>
-                                        <option>Pound</option>
-                                        <option>Kilograms</option>
+                                        {unitOptions.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
                                     </Form.Select>
                                 </Col>
                             </Row>
@@ -95,7 +120,7 @@ const ConverterComponent = () => {
                             <Row className="align-items-center">
                                 <Col md={3}>
                                     <Form.Label className="text-uppercase text-center d-block mb-0">
-                                        Total Price
+                                        {t("converter.totalPrice")}
                                     </Form.Label>
                                 </Col>
                                 <Col md={9}>
@@ -114,7 +139,7 @@ const ConverterComponent = () => {
                             <Row className="align-items-center">
                                 <Col md={3}>
                                     <Form.Label className="text-uppercase text-center d-block mb-0">
-                                        Price / Unit
+                                        {t("converter.pricePerUnit")}
                                     </Form.Label>
                                 </Col>
                                 <Col md={3}>
@@ -123,20 +148,20 @@ const ConverterComponent = () => {
 
                                 <Col md={2}>
                                     <Form.Label className="text-uppercase text-center d-block mb-0">
-                                        Currency
+                                        {t("converter.currency")}
                                     </Form.Label>
                                 </Col>
 
                                 <Col md={2}>
                                     <label className="container-checkbox">
-                                        Euro
+                                        {t("converter.euro")}
                                         <input name="radio" type="radio" defaultChecked={true} />
                                         <span className="checkmark"></span>
                                     </label>
                                 </Col>
                                 <Col md={2}>
                                     <label className="container-checkbox">
-                                        USD
+                                        {t("converter.usd")}
                                         <input name="radio" type="radio" />
                                         <span className="checkmark"></span>
                                     </label>
@@ -146,7 +171,7 @@ const ConverterComponent = () => {
                             <Row className="align-items-center">
                                 <Col md={3}>
                                     <Form.Label className="text-uppercase text-center d-block mb-0">
-                                        Quantity
+                                        {t("converter.quantity")}
                                     </Form.Label>
                                 </Col>
                                 <Col md={3}>
@@ -154,13 +179,17 @@ const ConverterComponent = () => {
                                 </Col>
 
                                 <Col md={2}>
-                                    <Form.Label className="text-uppercase text-center d-block mb-0">Unit</Form.Label>
+                                    <Form.Label className="text-uppercase text-center d-block mb-0">
+                                        {t("converter.unit")}
+                                    </Form.Label>
                                 </Col>
                                 <Col md={4}>
                                     <Form.Select className="form-control" aria-label="Default select example">
-                                        <option>Metric Ton</option>
-                                        <option>Pound</option>
-                                        <option>Kilograms</option>
+                                        {unitOptions.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
                                     </Form.Select>
                                 </Col>
                             </Row>
@@ -168,7 +197,7 @@ const ConverterComponent = () => {
                             <Row className="align-items-center">
                                 <Col md={3}>
                                     <Form.Label className="text-uppercase text-center d-block mb-0">
-                                        Total Price
+                                        {t("converter.totalPrice")}
                                     </Form.Label>
                                 </Col>
                                 <Col md={9}>
@@ -179,7 +208,7 @@ const ConverterComponent = () => {
 
                         <Row>
                             <Col md={12} className="text-center mt-5">
-                                <Button className="btn btn-primary outlinebtn px-5">Convert</Button>
+                                <Button className="btn btn-primary outlinebtn px-5">{t("converter.convert")}</Button>
                             </Col>
                         </Row>
                     </div>

@@ -21,6 +21,7 @@ import Faq from "./Faq";
 import TranslationTest from "./components/TranslationTest";
 import "./config/i18n"; // Import i18n configuration
 import "./App.css";
+import "./newtheme.css";
 
 const App: React.FC = () => {
     useEffect(() => {

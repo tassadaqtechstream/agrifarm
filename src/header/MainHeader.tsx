@@ -1,85 +1,105 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Container, Image } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import logoImg from "../assets/logo.png";
-
-export default function MainHeader() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const location = useLocation();
-    const { t } = useTranslation();
-
+const MainHeader = () => {
     return (
-        <Container>
-            <nav className="navbar navbar-expand-lg navbar-light bg-white main-header">
-                <Link to="/" className="navbar-brand p-0 m-0">
-                    <Image src={logoImg} alt="logo" width={80} height={80} />
-                </Link>
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    onClick={() => setIsOpen(!isOpen)}
-                    aria-controls="navbarNav"
-                    aria-expanded={isOpen}
-                    aria-label="Toggle navigation"
-                >
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className={`collapse navbar-collapse ${isOpen ? "show" : ""}`} id="navbarNav">
-                    <ul className="navbar-nav ms-auto">
-                        <li className="nav-item">
-                            <Link className={`nav-link ${location.pathname === "/" ? "active" : ""}`} to="/">
-                                {t("header.home")}
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link
-                                className={`nav-link ${location.pathname === "/commodities" ? "active" : ""}`}
-                                to="/commodities"
-                            >
-                                {t("header.market")}
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className={`nav-link ${location.pathname === "/tools" ? "active" : ""}`} to="/tools">
-                                {t("header.cropConverter")}
-                            </Link>
-                        </li>
-                        <li
-                            className={`nav-item dropdown ${dropdownOpen ? "show" : ""}`}
-                            onMouseEnter={() => setDropdownOpen(true)}
-                            onMouseLeave={() => setDropdownOpen(false)}
+        <nav className="bg-white/90 backdrop-blur-sm py-4 sticky top-0 z-50 shadow-sm">
+            <div className="container mx-auto px-4 md:px-6">
+                <div className="flex justify-between items-center">
+                    <a href="/" className="flex items-center">
+                        <div className="h-10 w-10 rounded-full bg-earth-olive flex items-center justify-center mr-2">
+                            <div className="h-6 w-6 rounded-full bg-earth-sand"></div>
+                        </div>
+                        <span className="font-bold text-xl text-earth-olive">
+                            Oasis<span className="text-earth-terracotta">Trade</span>
+                        </span>
+                    </a>
+                    <div className="hidden md:flex items-center space-x-8">
+                        <a
+                            href="#categories"
+                            className="text-earth-olive-dark hover:text-earth-terracotta transition-colors"
                         >
-                            <Link
-                                to="/"
-                                className="nav-link dropdown-toggle"
-                                role="button"
-                                aria-expanded={dropdownOpen}
-                            >
-                                {t("header.aboutUs")}
-                            </Link>
-                            <ul className={`dropdown-menu dropdopwn-hover ${dropdownOpen ? "show" : ""}`}>
-                                <li>
-                                    <Link to="/comapny" className="dropdown-item">
-                                        {t("header.ourCompany")}
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/about" className="dropdown-item">
-                                        {t("header.ourPeople")}
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/faq" className="dropdown-item">
-                                        {t("header.faq")}
-                                    </Link>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                            Categories
+                        </a>
+                        <a
+                            href="#pre-harvest"
+                            className="text-earth-olive-dark hover:text-earth-terracotta transition-colors"
+                        >
+                            Pre-Harvest
+                        </a>
+                        <a
+                            href="#how-it-works"
+                            className="text-earth-olive-dark hover:text-earth-terracotta transition-colors"
+                        >
+                            How It Works
+                        </a>
+                        <a
+                            href="#global-reach"
+                            className="text-earth-olive-dark hover:text-earth-terracotta transition-colors"
+                        >
+                            Global Reach
+                        </a>
+                        <div className="relative inline-block">
+                            <button className="flex items-center text-earth-olive-dark hover:text-earth-terracotta transition-colors">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="lucide lucide-globe h-4 w-4 mr-1"
+                                >
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                                    <path d="M2 12h20"></path>
+                                </svg>
+                                <span>English</span>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="lucide lucide-chevron-down h-4 w-4 ml-1"
+                                >
+                                    <path d="m6 9 6 6 6-6"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 bg-earth-terracotta hover:bg-earth-terracotta-dark text-white">
+                            Sign In
+                        </button>
+                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 bg-earth-olive hover:bg-earth-olive-dark text-white">
+                            Join Now
+                        </button>
+                    </div>
+                    <button className="md:hidden text-earth-olive-dark hover:text-earth-terracotta">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="lucide lucide-menu h-6 w-6"
+                        >
+                            <line x1="4" x2="20" y1="12" y2="12"></line>
+                            <line x1="4" x2="20" y1="6" y2="6"></line>
+                            <line x1="4" x2="20" y1="18" y2="18"></line>
+                        </svg>
+                    </button>
                 </div>
-            </nav>
-        </Container>
+            </div>
+        </nav>
     );
-}
+};
+
+export default MainHeader;

@@ -53,7 +53,7 @@ h6 {
     font-family: "Antonio", serif;
 }
 .container {
-    max-width: 1170px !important;
+    max-width: 1400px !important;
 }
 a,
 button {
@@ -274,9 +274,9 @@ img {
 .our-solution-sec {
     background-color: #f7f6f6;
 }
-section {
+/* section {
     padding: 5% 0;
-}
+} */
 
 .text-holder h2 {
     font-size: 4rem;
@@ -1147,4 +1147,7 @@ label.required:after {
 
 [dir="rtl"] body {
     font-family: "Cairo", sans-serif;
+}
+.linebar-gray {
+    top: 30px;
 }

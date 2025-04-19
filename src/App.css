@@ -1151,3 +1151,14 @@ label.required:after {
 .linebar-gray {
     top: 30px;
 }
+.dropdown-toggle::after {
+    display: none;
+}
+.form-check-input:checked {
+    background-color: #5c6d35;
+    border-color: #5c6d35;
+}
+
+.category-filters .hover\:text-accent-foreground:hover {
+    color: hsl(78.21deg 34.57% 31.76% / 58%);
+}

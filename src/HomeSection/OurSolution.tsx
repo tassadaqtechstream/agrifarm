@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const OurSolution = () => {
     return (
         <section id="categories" className="py-16 md:py-24 bg-white">
@@ -33,8 +35,8 @@ const OurSolution = () => {
                             </div>
                             <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Fruits</h3>
                             <p className="text-earth-olive-dark/70">Fresh seasonal fruits from local farms</p>
-                            <a
-                                href="#"
+                            <Link
+                                to="/"
                                 className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
                                 Explore
@@ -52,7 +54,7 @@ const OurSolution = () => {
                                         strokeLinejoin="round"
                                     ></path>
                                 </svg>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                     <div className="bg-green-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.1s" }}>
@@ -77,8 +79,8 @@ const OurSolution = () => {
                             </div>
                             <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Vegetables</h3>
                             <p className="text-earth-olive-dark/70">Organic and conventional vegetables</p>
-                            <a
-                                href="#"
+                            <Link
+                                to="/"
                                 className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
                                 Explore
@@ -96,7 +98,7 @@ const OurSolution = () => {
                                         strokeLinejoin="round"
                                     ></path>
                                 </svg>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                     <div className="bg-amber-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.2s" }}>
@@ -126,8 +128,8 @@ const OurSolution = () => {
                             </div>
                             <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Grains</h3>
                             <p className="text-earth-olive-dark/70">Premium quality wheat, rice, and cereals</p>
-                            <a
-                                href="#"
+                            <Link
+                                to="/"
                                 className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
                                 Explore
@@ -145,7 +147,7 @@ const OurSolution = () => {
                                         strokeLinejoin="round"
                                     ></path>
                                 </svg>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                     <div className="bg-orange-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.3s" }}>
@@ -169,8 +171,8 @@ const OurSolution = () => {
                             </div>
                             <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Spices</h3>
                             <p className="text-earth-olive-dark/70">Authentic regional spices and herbs</p>
-                            <a
-                                href="#"
+                            <Link
+                                to="/"
                                 className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
                                 Explore
@@ -188,7 +190,7 @@ const OurSolution = () => {
                                         strokeLinejoin="round"
                                     ></path>
                                 </svg>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                     <div className="bg-pink-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.4s" }}>
@@ -215,8 +217,8 @@ const OurSolution = () => {
                             </div>
                             <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Flowers</h3>
                             <p className="text-earth-olive-dark/70">Ornamental plants and cut flowers</p>
-                            <a
-                                href="#"
+                            <Link
+                                to="/"
                                 className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
                                 Explore
@@ -234,7 +236,7 @@ const OurSolution = () => {
                                         strokeLinejoin="round"
                                     ></path>
                                 </svg>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                     <div className="bg-yellow-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.5s" }}>
@@ -259,8 +261,8 @@ const OurSolution = () => {
                             </div>
                             <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Livestock</h3>
                             <p className="text-earth-olive-dark/70">Responsibly raised livestock products</p>
-                            <a
-                                href="#"
+                            <Link
+                                to="/"
                                 className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
                                 Explore
@@ -278,7 +280,7 @@ const OurSolution = () => {
                                         strokeLinejoin="round"
                                     ></path>
                                 </svg>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                     <div className="bg-blue-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.6s" }}>
@@ -301,8 +303,8 @@ const OurSolution = () => {
                             </div>
                             <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Dairy &amp; Eggs</h3>
                             <p className="text-earth-olive-dark/70">Farm-fresh dairy products and eggs</p>
-                            <a
-                                href="#"
+                            <Link
+                                to="/"
                                 className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
                                 Explore
@@ -320,7 +322,7 @@ const OurSolution = () => {
                                         strokeLinejoin="round"
                                     ></path>
                                 </svg>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                     <div className="bg-gray-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.7s" }}>
@@ -346,8 +348,8 @@ const OurSolution = () => {
                             </div>
                             <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">More</h3>
                             <p className="text-earth-olive-dark/70">Explore other agricultural categories</p>
-                            <a
-                                href="#"
+                            <Link
+                                to="/"
                                 className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
                                 Explore
@@ -365,7 +367,7 @@ const OurSolution = () => {
                                         strokeLinejoin="round"
                                     ></path>
                                 </svg>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>

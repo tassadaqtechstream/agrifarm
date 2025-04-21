@@ -19,6 +19,7 @@ import AllDeals from "./AllDeals";
 import Bidpage from "./Bidpage";
 import OurCompany from "./OurCompany";
 import OurPeople from "./OurPeople";
+import Categories from "./pages/Categories";
 import Faq from "./Faq";
 import TranslationTest from "./components/TranslationTest";
 import "./config/i18n"; // Import i18n configuration
@@ -57,6 +58,7 @@ const App: React.FC = () => {
                         <Route path="/signup" element={<SignUp />} />
                         <Route path="/signup/buyer" element={<SignUpBuyer />} />
                         <Route path="/signup/seller" element={<SignUpSeller />} />
+                        <Route path="/categories" element={<Categories />} />
                     </Route>
 
                     {/* <Route path="/confirmation" element={<Confirmation />} /> */}

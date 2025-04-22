@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Col, Container, Row, Image } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 // ✅ Import images from src/assets
 import partner1 from "../assets/p-1.png";
@@ -8,72 +9,68 @@ import partner3 from "../assets/p-3.png";
 import partner4 from "../assets/p-4.png";
 
 const PremiumPartners = () => {
+    const { t } = useTranslation();
+
+    const partners = [
+        {
+            id: "sgs",
+            image: partner1,
+            alt: "Premium Partner SGS",
+        },
+        {
+            id: "orey",
+            image: partner2,
+            alt: "Premium Partner Orey Shipping",
+        },
+        {
+            id: "cca",
+            image: partner3,
+            alt: "Premium Partner CCA Law Firm",
+            imgClass: "cca-logo",
+        },
+        {
+            id: "mangopay",
+            image: partner4,
+            alt: "Premium Partner Mangopay",
+        },
+    ];
+
+    const getTranslation = (key: string) => {
+        try {
+            const translation = t(key);
+            return translation === key ? t(`${key}`) : translation;
+        } catch (error) {
+            console.error(`Translation error for key: ${key}`, error);
+            return key.split(".").pop() || key;
+        }
+    };
+
     return (
         <section className="our-solution-sec bg-white">
             <Container>
                 <div className="text-center text-holder mb-5">
                     <h2 className="mb-5">
-                        {" "}
-                        <span>Premium</span> Partners
+                        <span>{getTranslation("components.premiumPartners.title")}</span>{" "}
+                        {getTranslation("components.premiumPartners.titleSpan")}
                     </h2>
                 </div>
                 <Row className="py-5">
-                    <Col md={3}>
-                        <Link to="/" className="text-center d-block premium-partner-card">
-                            <Image
-                                src={partner1}
-                                className="premium-img"
-                                alt="Premium Partner SGS"
-                                width={200}
-                                height={200}
-                            />
-                            <p>SGS</p>
-                            <h6>Quality Certification</h6>
-                            <p>Premium Partner</p>
-                        </Link>
-                    </Col>
-                    <Col md={3}>
-                        <Link to="/" className="text-center d-block premium-partner-card">
-                            <Image
-                                src={partner2}
-                                className="premium-img"
-                                alt="Premium Partner Orey Shipping"
-                                width={200}
-                                height={200}
-                            />
-                            <p>Orey Shipping</p>
-                            <h6>Logistics & Transportation</h6>
-                            <p>Premium Partner</p>
-                        </Link>
-                    </Col>
-                    <Col md={3}>
-                        <Link to="/" className="text-center d-block premium-partner-card">
-                            <Image
-                                src={partner3}
-                                className="premium-img cca-logo"
-                                alt="Premium Partner CCA Law Firm"
-                                width={200}
-                                height={200}
-                            />
-                            <p>CCA Law Firm</p>
-                            <h6>Legal Services</h6>
-                            <p>Premium Partner</p>
-                        </Link>
-                    </Col>
-                    <Col md={3}>
-                        <Link to="/" className="text-center d-block premium-partner-card">
-                            <Image
-                                src={partner4}
-                                className="premium-img"
-                                alt="Premium Partner Mangopay"
-                                width={200}
-                                height={200}
-                            />
-                            <p>Mangopay</p>
-                            <h6>Payments</h6>
-                            <p>Premium Partner</p>
-                        </Link>
-                    </Col>
+                    {partners.map((partner) => (
+                        <Col md={3} key={partner.id}>
+                            <Link to="/" className="text-center d-block premium-partner-card">
+                                <Image
+                                    src={partner.image}
+                                    className={`premium-img ${partner.imgClass || ""}`}
+                                    alt={getTranslation(`components.premiumPartners.partners.${partner.id}.name`)}
+                                    width={200}
+                                    height={200}
+                                />
+                                <p>{getTranslation(`components.premiumPartners.partners.${partner.id}.name`)}</p>
+                                <h6>{getTranslation(`components.premiumPartners.partners.${partner.id}.service`)}</h6>
+                                <p>{getTranslation(`components.premiumPartners.partners.${partner.id}.type`)}</p>
+                            </Link>
+                        </Col>
+                    ))}
                 </Row>
             </Container>
         </section>

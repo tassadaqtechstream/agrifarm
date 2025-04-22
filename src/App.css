@@ -53,7 +53,7 @@ h6 {
     font-family: "Antonio", serif;
 }
 .container {
-    max-width: 1170px !important;
+    max-width: 1400px !important;
 }
 a,
 button {
@@ -274,9 +274,9 @@ img {
 .our-solution-sec {
     background-color: #f7f6f6;
 }
-section {
+/* section {
     padding: 5% 0;
-}
+} */
 
 .text-holder h2 {
     font-size: 4rem;
@@ -1105,4 +1105,60 @@ label.required:after {
 }
 .text-success {
     color: #4caf50 !important;
+}
+
+/* RTL Support */
+[dir="rtl"] {
+    text-align: right;
+}
+
+[dir="rtl"] .me-2 {
+    margin-right: 0 !important;
+    margin-left: 0.5rem !important;
+}
+
+[dir="rtl"] .pe-3 {
+    padding-right: 0 !important;
+    padding-left: 1rem !important;
+}
+
+[dir="rtl"] .border-end {
+    border-right: none !important;
+    border-left: 1px solid #dee2e6 !important;
+}
+
+[dir="rtl"] .header-right {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .dropdown-menu {
+    text-align: right;
+}
+
+[dir="rtl"] .justify-content-between {
+    flex-direction: row-reverse;
+}
+
+/* Font support for Arabic */
+@font-face {
+    font-family: "Cairo";
+    src: url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap");
+}
+
+[dir="rtl"] body {
+    font-family: "Cairo", sans-serif;
+}
+.linebar-gray {
+    top: 30px;
+}
+.dropdown-toggle::after {
+    display: none;
+}
+.form-check-input:checked {
+    background-color: #5c6d35;
+    border-color: #5c6d35;
+}
+
+.category-filters .hover\:text-accent-foreground:hover {
+    color: hsl(78.21deg 34.57% 31.76% / 58%);
 }

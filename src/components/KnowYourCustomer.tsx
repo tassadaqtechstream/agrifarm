@@ -1,35 +1,23 @@
 import { Container } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 const KnowYourCustomer = () => {
+    const { t } = useTranslation();
+
     return (
-        <section className=" our-solution-sec">
+        <section className="our-solution-sec">
             <Container>
-                <h2 className="display-4 text-center mb-4">
-                    KNOW-<span className="text-success">YOUR</span>-CUSTOMER
-                </h2>
-                <p className="lead text-center mb-5">
-                    Know-Your-Customer (KYC) is the process we use to verify the identity and origin of finance of users
-                    in our digital market place. Thus, preventing any money laundering and the financing of terrorist
-                    activities over our platform, whilst creating a network with only trustworthy agricultural buyers
-                    and sellers.
-                </p>
+                <h2 className="display-4 text-center mb-4">{t("components.knowYourCustomer.title")}</h2>
+                <p className="lead text-center mb-5">{t("components.knowYourCustomer.description")}</p>
 
                 <div className="row">
                     <div className="col-md-6">
-                        <h3 className="text-success mb-2">KYC FOR SELLERS</h3>
-                        <p>
-                            Seller accounts are verified by Agri MP and our partners. They are responsible for reviewing
-                            the company's registration document, proof of I.D. and user residence, and proof of company
-                            IBAN issues by that seller's bank.
-                        </p>
+                        <h3 className="text-success mb-2">{t("components.knowYourCustomer.sellersTitle")}</h3>
+                        <p>{t("components.knowYourCustomer.sellersDescription")}</p>
                     </div>
                     <div className="col-md-6">
-                        <h3 className="text-success mb-2">KYC FOR BUYERS</h3>
-                        <p>
-                            Buyer accounts are verified by Agri MP and our partners. The buyer KYC process is equal to
-                            the seller's, but is not mandatory unless the buyer want to retract funds from his Agri MP
-                            wallet.
-                        </p>
+                        <h3 className="text-success mb-2">{t("components.knowYourCustomer.buyersTitle")}</h3>
+                        <p>{t("components.knowYourCustomer.buyersDescription")}</p>
                     </div>
                 </div>
             </Container>

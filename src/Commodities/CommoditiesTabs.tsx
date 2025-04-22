@@ -5,6 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import Row from "react-bootstrap/Row";
 import Tab from "react-bootstrap/Tab";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { commoditiesAPI } from "../utility/Apis.ts"; // Import the API service
 
 // Fallback images
@@ -14,19 +15,6 @@ import grains3 from "../assets/grans-3.png";
 import grains4 from "../assets/grans-4.png";
 
 // Interface definitions
-interface TreeCategory {
-    id: number;
-    name: string;
-    slug: string;
-    description?: string;
-    image: string | null;
-    children: TreeCategory[];
-}
-
-interface TreeResponse {
-    tree: TreeCategory[];
-}
-
 interface CommodityProduct {
     id: number;
     name: string;
@@ -57,8 +45,8 @@ const fallbackCommodities: FormattedCommodity[] = [
             { id: 1, name: "Rice", slug: "rice", commodity_id: 1 },
             { id: 2, name: "Wheat", slug: "wheat", commodity_id: 1 },
             { id: 3, name: "Corn", slug: "corn", commodity_id: 1 },
-            { id: 4, name: "Barley", slug: "barley", commodity_id: 1 }
-        ]
+            { id: 4, name: "Barley", slug: "barley", commodity_id: 1 },
+        ],
     },
     {
         key: "nuts",
@@ -70,8 +58,8 @@ const fallbackCommodities: FormattedCommodity[] = [
             { id: 6, name: "Cashews", slug: "cashews", commodity_id: 2 },
             { id: 7, name: "Walnuts", slug: "walnuts", commodity_id: 2 },
             { id: 8, name: "Pistachios", slug: "pistachios", commodity_id: 2 },
-            { id: 9, name: "Peanuts", slug: "peanuts", commodity_id: 2 }
-        ]
+            { id: 9, name: "Peanuts", slug: "peanuts", commodity_id: 2 },
+        ],
     },
     {
         key: "coffee",
@@ -82,8 +70,8 @@ const fallbackCommodities: FormattedCommodity[] = [
             { id: 10, name: "Arabica", slug: "arabica", commodity_id: 3 },
             { id: 11, name: "Robusta", slug: "robusta", commodity_id: 3 },
             { id: 12, name: "Liberica", slug: "liberica", commodity_id: 3 },
-            { id: 13, name: "Excelsa", slug: "excelsa", commodity_id: 3 }
-        ]
+            { id: 13, name: "Excelsa", slug: "excelsa", commodity_id: 3 },
+        ],
     },
     {
         key: "oils",
@@ -95,12 +83,13 @@ const fallbackCommodities: FormattedCommodity[] = [
             { id: 15, name: "Coconut Oil", slug: "coconut-oil", commodity_id: 4 },
             { id: 16, name: "Sunflower Oil", slug: "sunflower-oil", commodity_id: 4 },
             { id: 17, name: "Canola Oil", slug: "canola-oil", commodity_id: 4 },
-            { id: 18, name: "Sesame Oil", slug: "sesame-oil", commodity_id: 4 }
-        ]
+            { id: 18, name: "Sesame Oil", slug: "sesame-oil", commodity_id: 4 },
+        ],
     },
 ];
 
 const CommoditiesTabs: React.FC = () => {
+    const { t } = useTranslation();
     const [commodities, setCommodities] = useState<FormattedCommodity[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -117,15 +106,15 @@ const CommoditiesTabs: React.FC = () => {
 
                 if (treeData && treeData.tree && treeData.tree.length > 0) {
                     // Format the tree data to match the component's expected structure
-                    const formattedData: FormattedCommodity[] = treeData.tree.map(item => {
+                    const formattedData: FormattedCommodity[] = treeData.tree.map((item) => {
                         // Convert children to products format
-                        const products: CommodityProduct[] = item.children.map(child => ({
+                        const products: CommodityProduct[] = item.children.map((child) => ({
                             id: child.id,
                             name: child.name,
                             slug: child.slug,
                             description: child.description,
                             image_url: child.image || undefined,
-                            commodity_id: item.id
+                            commodity_id: item.id,
                         }));
 
                         return {
@@ -133,7 +122,7 @@ const CommoditiesTabs: React.FC = () => {
                             id: item.id,
                             name: item.name,
                             image: item.image || getFallbackImage(item.slug),
-                            products: products
+                            products: products,
                         };
                     });
 
@@ -146,7 +135,7 @@ const CommoditiesTabs: React.FC = () => {
                 }
             } catch (err) {
                 console.error("Error fetching commodities:", err);
-                setError("Failed to load commodities. Using fallback data.");
+                setError(t("common.error"));
 
                 // Use fallback data if API fails
                 setCommodities(fallbackCommodities);
@@ -157,37 +146,44 @@ const CommoditiesTabs: React.FC = () => {
         };
 
         fetchCommodities();
-    }, []);
+    }, [t]);
 
     // Helper function to get fallback image based on commodity slug
     const getFallbackImage = (slug: string): string => {
         switch (slug) {
-            case 'grains':
-            case 'Grains':
+            case "grains":
+            case "Grains":
                 return grains1;
-            case 'nuts':
-            case 'Nuts':
+            case "nuts":
+            case "Nuts":
                 return grains2;
-            case 'coffee':
-            case 'Coffee':
-            case 'Green Coffee':
+            case "coffee":
+            case "Coffee":
+            case "Green Coffee":
                 return grains3;
-            case 'oils':
-            case 'Oils':
-            case 'Olive Oil & Other Oils':
+            case "oils":
+            case "Oils":
+            case "Olive Oil & Other Oils":
                 return grains4;
             default:
                 return grains1;
         }
     };
 
+    // Helper function to get translated name for a commodity
+    const getTranslatedName = (key: string): string => {
+        const translationKey = `commodities.${key}`;
+        const translation = t(translationKey);
+        return translation === translationKey ? key : translation;
+    };
+
     if (loading) {
         return (
             <div className="text-center p-5">
                 <div className="spinner-border" role="status">
-                    <span className="visually-hidden">Loading...</span>
+                    <span className="visually-hidden">{t("common.loading")}</span>
                 </div>
-                <p className="mt-2">Loading commodities...</p>
+                <p className="mt-2">{t("common.loading")}</p>
             </div>
         );
     }
@@ -203,8 +199,8 @@ const CommoditiesTabs: React.FC = () => {
                             {commodities.map((commodity) => (
                                 <Nav.Item key={commodity.key}>
                                     <Nav.Link eventKey={commodity.key}>
-                                        <Image src={commodity.image} alt={commodity.name} />
-                                        {commodity.name}
+                                        <Image src={commodity.image} alt={getTranslatedName(commodity.key)} />
+                                        {getTranslatedName(commodity.key)}
                                     </Nav.Link>
                                 </Nav.Item>
                             ))}
@@ -224,9 +220,9 @@ const CommoditiesTabs: React.FC = () => {
                                                 >
                                                     <Image
                                                         src={product.image_url || commodity.image}
-                                                        alt={product.name}
+                                                        alt={getTranslatedName(product.slug)}
                                                     />
-                                                    <p>{product.name}</p>
+                                                    <p>{getTranslatedName(product.slug)}</p>
                                                 </Link>
                                             </Col>
                                         ))}
@@ -237,8 +233,8 @@ const CommoditiesTabs: React.FC = () => {
                     </Col>
                     <Col sm={12}>
                         <div className="text-center commodities-text-wrapper" style={{ marginTop: "40px" }}>
-                            <h6 className="mb-3 text-white text-center">Can't find the Product you are looking for?</h6>
-                            <Button className="btn btn-header btn-white px-5 m-0">Talk to us</Button>
+                            <h6 className="mb-3 text-white text-center">{t("commodities.cantFind")}</h6>
+                            <Button className="btn btn-header btn-white px-5 m-0">{t("commodities.talkToUs")}</Button>
                         </div>
                     </Col>
                 </Row>

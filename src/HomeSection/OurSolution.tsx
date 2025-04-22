@@ -1,219 +1,378 @@
-import solutionImage from "../assets/our-solution.png";
-
 import { Link } from "react-router-dom";
-import { Col, Container, Row, Image } from "react-bootstrap";
 
 const OurSolution = () => {
     return (
-        <>
-            <section className="our-solution-sec">
-                <Container>
-                    <div className="text-center text-holder mb-4">
-                        <h2>
-                            Our <span>solution</span>
-                        </h2>
-                        <p>
-                            Green Oasis AG MarketPlace is a digital B2B market solution that brings together Farmers and
-                            Industrial Buyers.
-                        </p>
+        <section id="categories" className="py-16 md:py-24 bg-white">
+            <div className="container mx-auto px-4 md:px-6">
+                <div className="text-center mb-16">
+                    <h2 className="text-3xl md:text-4xl font-bold text-earth-olive-dark mb-4">
+                        Discover Our Product Categories
+                    </h2>
+                    <p className="text-lg text-earth-olive-dark/80 max-w-3xl mx-auto">
+                        Browse through our diverse range of agricultural products from trusted suppliers across the GCC
+                        region and beyond.
+                    </p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="bg-red-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0s" }}>
+                        <div className="flex flex-col items-center text-center">
+                            <div className="mb-4 p-3 rounded-full bg-white/80 shadow-sm">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="lucide lucide-apple h-8 w-8 text-earth-terracotta"
+                                >
+                                    <path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"></path>
+                                    <path d="M10 2c1 .5 2 2 2 5"></path>
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Fruits</h3>
+                            <p className="text-earth-olive-dark/70">Fresh seasonal fruits from local farms</p>
+                            <Link
+                                to="/"
+                                className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
+                            >
+                                Explore
+                                <svg
+                                    className="w-4 h-4 ml-1"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M5 12H19M19 12L12 5M19 12L12 19"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    ></path>
+                                </svg>
+                            </Link>
+                        </div>
                     </div>
-
-                    <Row className="mb-4">
-                        <Col md={6}>
-                            <div className="solution-box-img">
-                                <Image src={solutionImage} alt="solution" width={200} height={200} />
+                    <div className="bg-green-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.1s" }}>
+                        <div className="flex flex-col items-center text-center">
+                            <div className="mb-4 p-3 rounded-full bg-white/80 shadow-sm">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="lucide lucide-carrot h-8 w-8 text-earth-terracotta"
+                                >
+                                    <path d="M2.27 21.7s9.87-3.5 12.73-6.36a4.5 4.5 0 0 0-6.36-6.37C5.77 11.84 2.27 21.7 2.27 21.7zM8.64 14l-2.05-2.04M15.34 15l-2.46-2.46"></path>
+                                    <path d="M22 9s-1.33-2-3.5-2C16.86 7 15 9 15 9s1.33 2 3.5 2S22 9 22 9z"></path>
+                                    <path d="M15 2s-2 1.33-2 3.5S15 9 15 9s2-1.84 2-3.5C17 3.33 15 2 15 2z"></path>
+                                </svg>
                             </div>
-                        </Col>
-                        <Col md={6}>
-                            <div className="solution-box-text">
-                                <p>
-                                    We drive agricultural transactions through our digital platform in combination with
-                                    our service partnership network. Green Oasis AG MarketPlace accommodates online
-                                    payments between buyer and seller, product quality check options, and end-to-end
-                                    logistic services.
-                                </p>
-                                <p>
-                                    <b>
-                                        Green Oasis AG MarketPlace does not buy or sell crops and is not a broker.
-                                        Instead, we offer you the ability to effortlessly market your crop via our
-                                        platform.
-                                    </b>
-                                </p>
-                                <Row>
-                                    <Col md={6}>
-                                        <Link to="/commodities" className="btn btn-primary outlinebtn w-100">
-                                            Explore the marketplace
-                                        </Link>
-                                    </Col>
-                                    <Col md={6}>
-                                        <Link to="/" className="btn btn-primary outlinebtn w-100">
-                                            Learn more about us
-                                        </Link>
-                                    </Col>
-                                </Row>
+                            <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Vegetables</h3>
+                            <p className="text-earth-olive-dark/70">Organic and conventional vegetables</p>
+                            <Link
+                                to="/"
+                                className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
+                            >
+                                Explore
+                                <svg
+                                    className="w-4 h-4 ml-1"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M5 12H19M19 12L12 5M19 12L12 19"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    ></path>
+                                </svg>
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="bg-amber-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.2s" }}>
+                        <div className="flex flex-col items-center text-center">
+                            <div className="mb-4 p-3 rounded-full bg-white/80 shadow-sm">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="lucide lucide-wheat h-8 w-8 text-earth-terracotta"
+                                >
+                                    <path d="M2 22 16 8"></path>
+                                    <path d="M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"></path>
+                                    <path d="M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"></path>
+                                    <path d="M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"></path>
+                                    <path d="M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4Z"></path>
+                                    <path d="M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"></path>
+                                    <path d="M15.47 13.47 17 15l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L9 15l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"></path>
+                                    <path d="M19.47 9.47 21 11l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L13 11l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"></path>
+                                </svg>
                             </div>
-                        </Col>
-                    </Row>
-
-                    <Row className="mt-5 quailty-section">
-                        <Col md={4} className="text-center mt-5">
-                            <svg
-                                className="mb-2"
-                                width="48"
-                                height="48"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                stroke="#4caf50"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
+                            <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Grains</h3>
+                            <p className="text-earth-olive-dark/70">Premium quality wheat, rice, and cereals</p>
+                            <Link
+                                to="/"
+                                className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
-                                <path d="M3 11L12 2L21 11" />
-                                <path d="M5 10V21H19V10" />
-                                <path d="M9 21V13H15V21" />
-                            </svg>
-                            <h5>Market Opportunities</h5>
-                            <p>
-                                A user-friendly platform that generates market opportunity for farmers and industry
-                                buyers.
-                            </p>
-                        </Col>
-
-                        <Col md={4} className="text-center mt-5">
-                            <svg
-                                className="mb-2"
-                                width="48"
-                                height="48"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                stroke="#4caf50"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
+                                Explore
+                                <svg
+                                    className="w-4 h-4 ml-1"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M5 12H19M19 12L12 5M19 12L12 19"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    ></path>
+                                </svg>
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="bg-orange-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.3s" }}>
+                        <div className="flex flex-col items-center text-center">
+                            <div className="mb-4 p-3 rounded-full bg-white/80 shadow-sm">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="lucide lucide-leaf h-8 w-8 text-earth-terracotta"
+                                >
+                                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+                                    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Spices</h3>
+                            <p className="text-earth-olive-dark/70">Authentic regional spices and herbs</p>
+                            <Link
+                                to="/"
+                                className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M8 12L12 16L16 12" />
-                                <path d="M12 16V8" />
-                            </svg>
-                            <h5>Global Market Access</h5>
-                            <p>Unlimited access to a global market from anywhere, at any time.</p>
-                        </Col>
-
-                        <Col md={4} className="text-center mt-5">
-                            <svg
-                                className="mb-2"
-                                width="48"
-                                height="48"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                stroke="#4caf50"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
+                                Explore
+                                <svg
+                                    className="w-4 h-4 ml-1"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M5 12H19M19 12L12 5M19 12L12 19"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    ></path>
+                                </svg>
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="bg-pink-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.4s" }}>
+                        <div className="flex flex-col items-center text-center">
+                            <div className="mb-4 p-3 rounded-full bg-white/80 shadow-sm">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="lucide lucide-flower2 h-8 w-8 text-earth-terracotta"
+                                >
+                                    <path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v1M9 8a3 3 0 1 0 3 3M9 8h1m5 0a3 3 0 1 1-3 3m3-3h-1m-2 3v-1"></path>
+                                    <circle cx="12" cy="8" r="2"></circle>
+                                    <path d="M12 10v12"></path>
+                                    <path d="M12 22c4.2 0 7-1.667 7-5-4.2 0-7 1.667-7 5Z"></path>
+                                    <path d="M12 22c-4.2 0-7-1.667-7-5 4.2 0 7 1.667 7 5Z"></path>
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Flowers</h3>
+                            <p className="text-earth-olive-dark/70">Ornamental plants and cut flowers</p>
+                            <Link
+                                to="/"
+                                className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M6 10H18" />
-                                <path d="M6 14H18" />
-                                <path d="M10 18H14" />
-                            </svg>
-                            <h5>Transparency & Reliability</h5>
-                            <p>Transparent and reliable market information, deal creation, and negotiation.</p>
-                        </Col>
-
-                        <Col md={3} className="text-center mt-5">
-                            <svg
-                                className="mb-2"
-                                width="48"
-                                height="48"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                stroke="#4caf50"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
+                                Explore
+                                <svg
+                                    className="w-4 h-4 ml-1"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M5 12H19M19 12L12 5M19 12L12 19"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    ></path>
+                                </svg>
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="bg-yellow-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.5s" }}>
+                        <div className="flex flex-col items-center text-center">
+                            <div className="mb-4 p-3 rounded-full bg-white/80 shadow-sm">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="lucide lucide-beef h-8 w-8 text-earth-terracotta"
+                                >
+                                    <circle cx="12.5" cy="8.5" r="2.5"></circle>
+                                    <path d="M12.5 2a6.5 6.5 0 0 0-6.22 4.6c-1.1 3.13-.78 3.9-3.18 6.08A3 3 0 0 0 5 18c4 0 8.4-1.8 11.4-4.3A6.5 6.5 0 0 0 12.5 2Z"></path>
+                                    <path d="m18.5 6 2.19 4.5a6.48 6.48 0 0 1 .31 2 6.49 6.49 0 0 1-2.6 5.2C15.4 20.2 11 22 7 22a3 3 0 0 1-2.68-1.66L2.4 16.5"></path>
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Livestock</h3>
+                            <p className="text-earth-olive-dark/70">Responsibly raised livestock products</p>
+                            <Link
+                                to="/"
+                                className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M8 12L12 16L16 12" />
-                                <path d="M12 16V8" />
-                                <rect x="9" y="10" width="6" height="4" rx="1" />
-                            </svg>
-                            <h5>Secure Payments</h5>
-                            <p>Integrated and secure platform payment processes.</p>
-                        </Col>
-
-                        <Col md={3} className="text-center mt-5">
-                            <svg
-                                className="mb-2"
-                                width="48"
-                                height="48"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                stroke="#4caf50"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
+                                Explore
+                                <svg
+                                    className="w-4 h-4 ml-1"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M5 12H19M19 12L12 5M19 12L12 19"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    ></path>
+                                </svg>
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="bg-blue-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.6s" }}>
+                        <div className="flex flex-col items-center text-center">
+                            <div className="mb-4 p-3 rounded-full bg-white/80 shadow-sm">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="lucide lucide-egg h-8 w-8 text-earth-terracotta"
+                                >
+                                    <path d="M12 22c6.23-.05 7.87-5.57 7.5-10-.36-4.34-3.95-9.96-7.5-10-3.55.04-7.14 5.66-7.5 10-.37 4.43 1.27 9.95 7.5 10z"></path>
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">Dairy &amp; Eggs</h3>
+                            <p className="text-earth-olive-dark/70">Farm-fresh dairy products and eggs</p>
+                            <Link
+                                to="/"
+                                className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M6 15L10 12L14 15L18 12" />
-                                <path d="M12 8V12" />
-                                <rect x="9" y="10" width="6" height="4" rx="1" />
-                            </svg>
-                            <h5>Quality & Logistics</h5>
-                            <p>Tailored product quality verification and logistic services.</p>
-                        </Col>
-
-                        <Col md={3} className="text-center mt-5">
-                            <svg
-                                className="mb-2"
-                                width="48"
-                                height="48"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                stroke="#4caf50"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
+                                Explore
+                                <svg
+                                    className="w-4 h-4 ml-1"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M5 12H19M19 12L12 5M19 12L12 19"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    ></path>
+                                </svg>
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl p-6 card-hover" style={{ animationDelay: "0.7s" }}>
+                        <div className="flex flex-col items-center text-center">
+                            <div className="mb-4 p-3 rounded-full bg-white/80 shadow-sm">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="lucide lucide-circle-ellipsis h-8 w-8 text-earth-terracotta"
+                                >
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M17 12h.01"></path>
+                                    <path d="M12 12h.01"></path>
+                                    <path d="M7 12h.01"></path>
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">More</h3>
+                            <p className="text-earth-olive-dark/70">Explore other agricultural categories</p>
+                            <Link
+                                to="/"
+                                className="mt-4 text-earth-terracotta hover:text-earth-terracotta-dark font-medium inline-flex items-center"
                             >
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M8 12L12 16L16 12" />
-                                <path d="M6 8H18V16H6Z" />
-                                <path d="M9 10H15V14H9Z" />
-                            </svg>
-                            <h5>Verified Buyers & Sellers</h5>
-                            <p>A market with only verified buyers and sellers.</p>
-                        </Col>
-
-                        <Col md={3} className="text-center mt-5">
-                            <svg
-                                className="mb-2"
-                                width="48"
-                                height="48"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                stroke="#4caf50"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M12 8V12" />
-                                <path d="M9 12H15" />
-                                <path d="M8 16H16" />
-                            </svg>
-                            <h5>Customer Support</h5>
-                            <p>Customer support & insight.</p>
-                        </Col>
-                    </Row>
-                </Container>
-            </section>
-        </>
+                                Explore
+                                <svg
+                                    className="w-4 h-4 ml-1"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M5 12H19M19 12L12 5M19 12L12 19"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    ></path>
+                                </svg>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 };
 

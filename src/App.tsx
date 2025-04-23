@@ -25,6 +25,7 @@ import TranslationTest from "./components/TranslationTest";
 import "./config/i18n"; // Import i18n configuration
 import "./App.css";
 import "./newtheme.css";
+import PreHarvest from "./pages/PreHarvest";
 
 const App: React.FC = () => {
     useEffect(() => {
@@ -59,6 +60,7 @@ const App: React.FC = () => {
                         <Route path="/signup/buyer" element={<SignUpBuyer />} />
                         <Route path="/signup/seller" element={<SignUpSeller />} />
                         <Route path="/categories" element={<Categories />} />
+                        <Route path="/pre-harvest" element={<PreHarvest />} />
                     </Route>
 
                     {/* <Route path="/confirmation" element={<Confirmation />} /> */}

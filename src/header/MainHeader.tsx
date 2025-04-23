@@ -33,7 +33,10 @@ const MainHeader = () => {
                         >
                             Categories
                         </Link>
-                        <Link to="/" className="text-earth-olive-dark hover:text-earth-terracotta transition-colors">
+                        <Link
+                            to="/pre-harvest"
+                            className="text-earth-olive-dark hover:text-earth-terracotta transition-colors"
+                        >
                             Pre-Harvest
                         </Link>
                         <Link to="/" className="text-earth-olive-dark hover:text-earth-terracotta transition-colors">

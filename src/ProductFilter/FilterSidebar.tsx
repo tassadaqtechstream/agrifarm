@@ -54,21 +54,21 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ category, sub_category })
                     id: 1,
                     name: "Medium Grain",
                     slug: "medium-grain",
-                    commodity_id: 1
+                    commodity_id: 1,
                 },
                 {
                     id: 2,
                     name: "Japonica / Long A",
                     slug: "japonica-long-a",
-                    commodity_id: 1
+                    commodity_id: 1,
                 },
                 {
                     id: 3,
                     name: "Basmati Rice",
                     slug: "basmati-rice",
-                    commodity_id: 1
-                }
-            ]
+                    commodity_id: 1,
+                },
+            ],
         },
         {
             id: 2,
@@ -80,16 +80,16 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ category, sub_category })
                     id: 4,
                     name: "Durum Wheat",
                     slug: "durum-wheat",
-                    commodity_id: 2
+                    commodity_id: 2,
                 },
                 {
                     id: 5,
                     name: "Soft Wheat",
                     slug: "soft-wheat",
-                    commodity_id: 2
-                }
-            ]
-        }
+                    commodity_id: 2,
+                },
+            ],
+        },
     ];
 
     // Fetch all commodities on initial load
@@ -134,7 +134,8 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ category, sub_category })
         if (category) {
             setSelectedCategory(category);
         }
-        if (sub_category) { // Updated to use sub_category
+        if (sub_category) {
+            // Updated to use sub_category
             setSelectedProduct(sub_category);
         }
     }, [category, sub_category]);
@@ -146,8 +147,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ category, sub_category })
 
             // Find the commodity by name or slug from our local state first
             const commodity = commodities.find(
-                c => c.slug === categoryName.toLowerCase() ||
-                    c.name.toLowerCase() === categoryName.toLowerCase()
+                (c) => c.slug === categoryName.toLowerCase() || c.name.toLowerCase() === categoryName.toLowerCase()
             );
 
             if (commodity && Array.isArray(commodity.products) && commodity.products.length > 0) {
@@ -182,8 +182,8 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ category, sub_category })
 
                     // Find a matching dummy commodity to use as fallback
                     const dummyCommodity = dummyCommodities.find(
-                        c => c.slug === categoryName.toLowerCase() ||
-                            c.name.toLowerCase() === categoryName.toLowerCase()
+                        (c) =>
+                            c.slug === categoryName.toLowerCase() || c.name.toLowerCase() === categoryName.toLowerCase()
                     );
 
                     if (dummyCommodity) {
@@ -231,11 +231,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ category, sub_category })
         <>
             <div className="filter-sdiebar">
                 <h3 className="text-uppercase font-weight-bold mb-2">Characteristics</h3>
-                {error && (
-                    <div className="alert alert-danger mb-3">
-                        {error}
-                    </div>
-                )}
+                {error && <div className="alert alert-danger mb-3">{error}</div>}
                 <div className="filter-wrappper">
                     <div className="prodcutheader d-flex align-items-center mb-3">
                         <Image src={categoryImage} alt="product" />
@@ -243,10 +239,9 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ category, sub_category })
                     </div>
                     <Form.Group className="mb-3">
                         <Form.Label>Product Type</Form.Label>
-                        <Form.Control
-                            as="select"
+                        <Form.Select
                             value={selectedProduct}
-                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedProduct(e.target.value)}
+                            onChange={(e) => setSelectedProduct(e.target.value)}
                             disabled={loading}
                         >
                             <option value="">All</option>
@@ -255,7 +250,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ category, sub_category })
                                     {product.name}
                                 </option>
                             ))}
-                        </Form.Control>
+                        </Form.Select>
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Product Status</Form.Label>
@@ -368,11 +363,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ category, sub_category })
                         >
                             {loading ? "Loading..." : "Search"}
                         </Button>
-                        <Button
-                            className="btn btn-primary outlinebtn"
-                            onClick={handleClear}
-                            disabled={loading}
-                        >
+                        <Button className="btn btn-primary outlinebtn" onClick={handleClear} disabled={loading}>
                             Clear
                         </Button>
                     </div>

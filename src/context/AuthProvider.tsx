@@ -1,5 +1,5 @@
-import {createContext, useState, useEffect, useContext, ReactNode} from "react";
-import {authAPI, api} from "../utility/Apis.ts"; // Import the API utility we created
+import { createContext, useState, useEffect, useContext, ReactNode } from "react";
+import { authAPI } from "../utility/Apis.ts"; // Import the API utility we created
 
 // Define interfaces for our user data types
 interface Role {
@@ -52,7 +52,7 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Create provider component
-export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     const [userRoles, setUserRoles] = useState<Role[]>([]);
@@ -93,7 +93,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
         try {
             // Use the authAPI utility instead of direct axios calls
-            const {token, user} = await authAPI.login(email, password);
+            const { token, user } = await authAPI.login(email, password);
 
             // Store in localStorage
             localStorage.setItem("token", token);
@@ -105,16 +105,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
             setUserRoles(user.roles || []);
             setIsAuthenticated(true);
 
-            return {success: true};
-        } catch (error) {
-            console.error("Login error:", error);
+            return { success: true };
+        } catch (error: any) {
             if (error.response) {
                 return {
                     success: false,
-                    error: error.response.data.message || "Login failed"
+                    error: error.response.data.message || "Login failed",
                 };
             }
-            return {success: false, error: "An unexpected error occurred"};
+            return {
+                success: false,
+                error: "Network error",
+            };
         }
     };
 
@@ -141,7 +143,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
     // Check if user has a specific role
     const hasRole = (roleName: string): boolean => {
-        return userRoles.some(role => role.name === roleName);
+        return userRoles.some((role) => role.name === roleName);
     };
 
     // Context value
@@ -153,7 +155,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         isLoading,
         login,
         logout,
-        hasRole
+        hasRole,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

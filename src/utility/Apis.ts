@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import { env } from '../config/env';
 
 // Interface definitions
@@ -113,6 +113,41 @@ interface TreeResponse {
     tree: TreeCategory[];
 }
 
+// Product interface
+interface ApiData {
+    id: number;
+    name: string;
+    slug: string;
+    description: string | null;
+    image_url: string | null;
+    commodity_id: number;
+    created_at: string;
+    updated_at: string;
+}
+
+interface Product {
+    id: number;
+    name: string;
+    category: string;
+    sub_category: string;
+    price: string;
+    weight: string;
+    incoterm: string;
+    country: string;
+    description: string;
+    image: string;
+    stock: number;
+    verified: boolean;
+    expirationDate: string;
+    apiData: ApiData;
+}
+
+// Error response interface
+interface ErrorResponse {
+    message: string;
+    status: number;
+}
+
 // Create an axios instance with defaults
 export const api: AxiosInstance = axios.create({
     baseURL: env.apiUrl,
@@ -123,9 +158,10 @@ export const api: AxiosInstance = axios.create({
 
 // Request interceptor to add auth token to all requests
 api.interceptors.request.use(
-    (config: AxiosRequestConfig): AxiosRequestConfig => {
-        const token = localStorage.getItem('token');
-        if (token && config.headers) {
+    (config: InternalAxiosRequestConfig) => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            config.headers = config.headers || {};
             config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
@@ -137,18 +173,16 @@ api.interceptors.request.use(
 
 // Response interceptor to handle common errors
 api.interceptors.response.use(
-    (response: AxiosResponse): AxiosResponse => response,
-    (error) => {
-        // Handle 401 Unauthorized errors (token expired, etc.)
-        if (error.response && error.response.status === 401) {
-            // Clear local storage
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-
-            // Redirect to login page if not already there
-            if (window.location.pathname !== '/login') {
+    (response) => response,
+    (error: { response?: { data: ErrorResponse; status: number } }) => {
+        if (error.response) {
+            // Handle specific error cases
+            if (error.response.status === 401) {
+                // Handle unauthorized error
+                localStorage.removeItem('token');
                 window.location.href = '/login';
             }
+            return Promise.reject(error.response.data);
         }
         return Promise.reject(error);
     }

@@ -57,3 +57,16 @@ export interface ProductsResponse extends ApiResponse<Product[]> {
     page: number;
     pageSize: number;
 }
+
+export interface ProductDisplayItem {
+    id: number;
+    name: string;
+    price: string;
+    weight: string;
+    incoterm: string;
+    country: string;
+    verified: boolean;
+    expirationDate: string;
+    image: string | null;
+
+}

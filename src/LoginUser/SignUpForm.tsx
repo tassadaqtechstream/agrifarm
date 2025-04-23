@@ -2,6 +2,7 @@ import React, { useState, FormEvent, ChangeEvent } from "react";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { env } from '../config/env';
 
 // Define interfaces for form data
 interface FormData {
@@ -132,7 +133,7 @@ const SignUpForm: React.FC = () => {
             };
 
             // Send data to Laravel API
-            const response = await axios.post('http://apnafarm.com/api/b2b/register', apiData);
+            const response = await axios.post(`${env.apiUrl}/b2b/register`, apiData);
 
             // Handle successful registration
             console.log('Registration successful:', response.data);

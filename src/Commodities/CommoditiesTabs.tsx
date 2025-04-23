@@ -102,7 +102,7 @@ const CommoditiesTabs: React.FC = () => {
                 setLoading(true);
 
                 // Use your existing API utility to get the tree data
-                const treeData = await commoditiesAPI.getCategoryTree();
+                const treeData: TreeResponse = await commoditiesAPI.getCategoryTree();
 
                 if (treeData && treeData.tree && treeData.tree.length > 0) {
                     // Format the tree data to match the component's expected structure

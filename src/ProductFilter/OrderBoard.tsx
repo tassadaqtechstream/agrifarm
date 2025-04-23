@@ -1,47 +1,26 @@
 import React from "react";
 import { Card, Col, Row, Badge, Spinner } from "react-bootstrap";
-import defaultProductImage from "../assets/placeholder.png"; // Add a default image
+import defaultProductImage from "../assets/placeholder.png"; // Default image
+import { ProductDisplayItem } from "../utility/types.ts";
 
-// Interface for product data - matches your backend response
-interface Product {
-    id: number;
-    name: string;
-    price: string;
-    weight: string;
-    incoterm: string;
-    country: string;
-    verified: boolean;
-    expirationDate: string;
-    apiData: {
-        id: number;
-        name: string;
-        slug: string;
-        description: string | null;
-        image_url: string | null;
-        commodity_id: number;
-        created_at: string;
-        updated_at: string;
-    };
-}
+
 
 interface OrderBoardProps {
-    products: Product[];
+    products: ProductDisplayItem[];
     loading: boolean;
 }
 
 const OrderBoard: React.FC<OrderBoardProps> = ({ products, loading }) => {
-    // Function to get image URL with fallback
-    const getImageUrl = (product: Product) => {
-        if (product.apiData?.image_url) {
-            // Check if the image URL is a relative path or full URL
-            if (product.apiData.image_url.startsWith('http')) {
-                return product.apiData.image_url;
+    const getImageUrl = (product: ProductDisplayItem) => {
+        if (product.image) {
+            console.log(product.image);
+            if (product.image.startsWith("http")) {
+                return product.image;
             } else {
-                // For relative paths, prepend the API base URL
-                return `${import.meta.env.VITE_API_URL || ''}/${product.apiData.image_url}`;
+                return `${import.meta.env.VITE_API_URL || ""}/${product.image}`;
             }
         }
-        return defaultProductImage; // Fallback to default image
+        return defaultProductImage;
     };
 
     if (loading) {
@@ -76,7 +55,6 @@ const OrderBoard: React.FC<OrderBoardProps> = ({ products, loading }) => {
                                     alt={product.name}
                                     className="card-img-top product-img"
                                     onError={(e) => {
-                                        // Fallback if image fails to load
                                         (e.target as HTMLImageElement).src = defaultProductImage;
                                     }}
                                 />

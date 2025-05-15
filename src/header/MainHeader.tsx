@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
-import { useAuth } from "../context/AuthProvider";
+import { useAuth } from "@contexts/AuthContext.tsx";
 
 const MainHeader = () => {
     const { isAuthenticated, logout: performLogout, currentUser } = useAuth();

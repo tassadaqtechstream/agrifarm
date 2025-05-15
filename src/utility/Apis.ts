@@ -1,8 +1,24 @@
+
+
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import { env } from '../config/env';
 
-// Interface definitions
-interface User {
+/**
+ * Environment configuration
+ */
+export const envCont = {
+    apiUrl:env.apiUrl || 'http://localhost:8000/api',
+    apiVersion: env?.API_VERSION || 'v1',
+};
+
+// =========================================================
+// Type Definitions
+// =========================================================
+
+/**
+ * User related interfaces
+ */
+export interface User {
     id: number;
     name: string;
     email: string;
@@ -11,7 +27,7 @@ interface User {
     roles?: Role[];
 }
 
-interface UserProfile {
+export interface UserProfile {
     id: number;
     user_id: number;
     first_name: string;
@@ -28,37 +44,89 @@ interface UserProfile {
     other_preferred_products?: string;
 }
 
-interface Role {
+export interface Role {
     id: number;
     name: string;
 }
 
-interface LoginResponse {
+export interface LoginResponse {
     token: string;
     user: User;
 }
 
-interface ProductItem {
+export interface SignupFormData {
+    email: string;
+    password: string;
+    password_confirmation: string;
+    first_name: string;
+    last_name: string;
+    company: string;
+    phone_number: string;
+    fiscal_address: string;
+    zip_code: string;
+    country: string;
+    company_activity_id: number;
+    user_type?: 'seller' | 'buyer';
+    [key: string]: string | number | boolean | undefined;
+}
+
+/**
+ * Product related interfaces
+ */
+export interface ProductItem {
     id: number;
     name: string;
     description: string;
     // Add other product fields as needed
 }
 
-interface DealItem {
+export interface ApiData {
+    id: number;
+    name: string;
+    slug: string;
+    description: string | null;
+    image_url: string | null;
+    commodity_id: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Product {
+    id: number;
+    name: string;
+    category: string;
+    sub_category: string;
+    price: string;
+    weight: string;
+    incoterm: string;
+    country: string;
+    description: string;
+    image: string;
+    stock: number;
+    verified: boolean;
+    expirationDate: string;
+    apiData: ApiData;
+}
+
+/**
+ * Deal related interfaces
+ */
+export interface DealItem {
     id: number;
     title: string;
     // Add other deal fields as needed
 }
 
-interface BidData {
+export interface BidData {
     amount: number;
     notes?: string;
     // Add other bid fields as needed
 }
 
-// Commodity interfaces
-interface CommodityProduct {
+/**
+ * Commodity related interfaces
+ */
+export interface CommodityProduct {
     id: number;
     name: string;
     slug: string;
@@ -69,7 +137,7 @@ interface CommodityProduct {
     updated_at?: string;
 }
 
-interface Commodity {
+export interface Commodity {
     id: number;
     name: string;
     slug: string;
@@ -80,7 +148,7 @@ interface Commodity {
     updated_at?: string;
 }
 
-interface CommoditiesResponse {
+export interface CommoditiesResponse {
     data: Commodity[];
     links?: {
         first: string;
@@ -99,8 +167,7 @@ interface CommoditiesResponse {
     };
 }
 
-// Tree category interfaces
-interface TreeCategory {
+export interface TreeCategory {
     id: number;
     name: string;
     slug: string;
@@ -109,161 +176,399 @@ interface TreeCategory {
     children: TreeCategory[];
 }
 
-interface TreeResponse {
+export interface TreeResponse {
     tree: TreeCategory[];
 }
 
-// Product interface
-interface ApiData {
-    id: number;
-    name: string;
-    slug: string;
-    description: string | null;
-    image_url: string | null;
-    commodity_id: number;
-    created_at: string;
-    updated_at: string;
-}
-
-interface Product {
-    id: number;
-    name: string;
-    category: string;
-    sub_category: string;
-    price: string;
-    weight: string;
-    incoterm: string;
-    country: string;
-    description: string;
-    image: string;
-    stock: number;
-    verified: boolean;
-    expirationDate: string;
-    apiData: ApiData;
-}
-
-// Error response interface
-interface ErrorResponse {
+/**
+ * Error related interfaces
+ */
+export interface ErrorResponse {
     message: string;
     status: number;
 }
 
-// Create an axios instance with defaults
-export const api: AxiosInstance = axios.create({
-    baseURL: env.apiUrl,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
+// =========================================================
+// API Client Core
+// =========================================================
 
-// Request interceptor to add auth token to all requests
-api.interceptors.request.use(
-    (config: InternalAxiosRequestConfig) => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            config.headers = config.headers || {};
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
+/**
+ * Creates and configures the API client with interceptors
+ * for authentication and error handling.
+ */
+export const createApiClient = (): AxiosInstance => {
+    const apiClient = axios.create({
+        baseURL: env.apiUrl,
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+    });
 
-// Response interceptor to handle common errors
-api.interceptors.response.use(
-    (response) => response,
-    (error: { response?: { data: ErrorResponse; status: number } }) => {
-        if (error.response) {
-            // Handle specific error cases
-            if (error.response.status === 401) {
-                // Handle unauthorized error
-                localStorage.removeItem('token');
-                window.location.href = '/login';
+    // Request interceptor for authentication
+    apiClient.interceptors.request.use(
+        (config: InternalAxiosRequestConfig) => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                config.headers = config.headers || {};
+                config.headers.Authorization = `Bearer ${token}`;
             }
-            return Promise.reject(error.response.data);
-        }
-        return Promise.reject(error);
-    }
-);
+            return config;
+        },
+        (error) => Promise.reject(error)
+    );
 
-// Auth related API calls
+    // Response interceptor for error handling
+    apiClient.interceptors.response.use(
+        (response) => response,
+        (error) => {
+            if (error.response) {
+                const { status, data } = error.response;
+
+                // Handle authentication errors
+                if (status === 401) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/login';
+                }
+
+                // Handle validation errors
+                if (status === 422) {
+                    return Promise.reject({
+                        ...data,
+                        isValidationError: true
+                    });
+                }
+
+                // Handle rate limiting
+                if (status === 429) {
+                    return Promise.reject({
+                        message: 'Too many requests. Please try again later.',
+                        status,
+                    });
+                }
+
+                // Handle server errors
+                if (status >= 500) {
+                    return Promise.reject({
+                        message: 'Server error. Please try again later.',
+                        status,
+                        originalError: data,
+                    });
+                }
+
+                return Promise.reject(data);
+            }
+
+            // Handle network errors
+            return Promise.reject({
+                message: 'Network error. Please check your connection.',
+                isNetworkError: true,
+            });
+        }
+    );
+
+    return apiClient;
+};
+
+// Initialize the API client
+export const api = createApiClient();
+
+// =========================================================
+// Authentication API
+// =========================================================
+
 export const authAPI = {
+    /**
+     * Authenticates a user with email and password
+     *
+     * @param email User email
+     * @param password User password
+     * @returns Login response with token and user data
+     */
     login: async (email: string, password: string): Promise<LoginResponse> => {
         const response = await api.post<LoginResponse>('/b2b/login', { email, password });
+
+        // Store authentication data
+        if (response.data && response.data.token) {
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+        }
+
         return response.data;
     },
 
+    /**
+     * Logs out the current user
+     */
     logout: async (): Promise<void> => {
         try {
             await api.post('/logout');
+        } catch (error) {
+            console.error('Logout API error:', error);
         } finally {
-            // Clear storage regardless of API response
+            // Always clear local storage
             localStorage.removeItem('token');
             localStorage.removeItem('user');
         }
     },
 
+    /**
+     * Initiates password reset flow
+     *
+     * @param email User email
+     * @returns Response message
+     */
     forgotPassword: async (email: string): Promise<{ message: string }> => {
         const response = await api.post<{ message: string }>('/password/reset', { email });
         return response.data;
-    }
-};
+    },
 
-// Example of other API modules you might want to create
-export const productsAPI = {
-    getAll: async (): Promise<ProductItem[]> => {
-        const response = await api.get<ProductItem[]>('/products');
+    /**
+     * Registers a new user
+     *
+     * @param formData User registration data
+     * @param userType Type of user (seller or buyer)
+     * @returns Response message
+     */
+    signup: async (formData: SignupFormData, userType?: 'seller' | 'buyer'): Promise<{ message: string }> => {
+        // Determine user type
+        const apiData = {
+            ...formData,
+            user_type: userType || formData.user_type || 'seller'
+        };
+
+        // Choose the correct endpoint
+        const endpoint = apiData.user_type === 'buyer'
+            ? '/b2b/register-buyer'
+            : '/b2b/register';
+
+        const response = await api.post<{ message: string }>(endpoint, apiData);
         return response.data;
     },
 
+    /**
+     * Gets the current authenticated user
+     *
+     * @returns User data or null if not authenticated
+     */
+    getCurrentUser: (): User | null => {
+        const userJson = localStorage.getItem('user');
+        if (userJson) {
+            try {
+                return JSON.parse(userJson);
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                return null;
+            }
+        }
+        return null;
+    },
+
+    /**
+     * Checks if user is authenticated
+     *
+     * @returns Boolean indicating authentication status
+     */
+    isAuthenticated: (): boolean => {
+        return !!localStorage.getItem('token');
+    },
+
+    /**
+     * Updates user profile
+     *
+     * @param userId User ID
+     * @param profileData Updated profile data
+     * @returns Updated user data
+     */
+    updateProfile: async (userId: number, profileData: Partial<UserProfile>): Promise<User> => {
+        const response = await api.put<{ data: User }>(`/users/${userId}/profile`, profileData);
+
+        // Update stored user data
+        if (response.data && response.data.data) {
+            localStorage.setItem('user', JSON.stringify(response.data.data));
+        }
+
+        return response.data.data;
+    }
+};
+
+// =========================================================
+// Products API
+// =========================================================
+
+export const productsAPI = {
+    /**
+     * Gets all products
+     *
+     * @param page Page number for pagination
+     * @param perPage Items per page
+     * @returns Array of product items
+     */
+    getAll: async (page: number = 1, perPage: number = 20): Promise<ProductItem[]> => {
+        const response = await api.get<ProductItem[]>('/products', {
+            params: { page, per_page: perPage }
+        });
+        return response.data;
+    },
+
+    /**
+     * Gets a product by ID
+     *
+     * @param id Product ID
+     * @returns Product item
+     */
     getById: async (id: number): Promise<ProductItem> => {
         const response = await api.get<ProductItem>(`/products/${id}`);
         return response.data;
     },
 
-    // ...other product-related API calls
-};
-
-export const dealsAPI = {
-    getAll: async (): Promise<DealItem[]> => {
-        const response = await api.get<DealItem[]>('/deals');
+    /**
+     * Creates a new product
+     *
+     * @param productData Product data
+     * @returns Created product
+     */
+    create: async (productData: Partial<ProductItem>): Promise<ProductItem> => {
+        const response = await api.post<ProductItem>('/products', productData);
         return response.data;
     },
 
+    /**
+     * Updates a product
+     *
+     * @param id Product ID
+     * @param productData Updated product data
+     * @returns Updated product
+     */
+    update: async (id: number, productData: Partial<ProductItem>): Promise<ProductItem> => {
+        const response = await api.put<ProductItem>(`/products/${id}`, productData);
+        return response.data;
+    },
+
+    /**
+     * Deletes a product
+     *
+     * @param id Product ID
+     * @returns Success message
+     */
+    delete: async (id: number): Promise<{ message: string }> => {
+        const response = await api.delete<{ message: string }>(`/products/${id}`);
+        return response.data;
+    },
+
+    /**
+     * Searches for products
+     *
+     * @param query Search query
+     * @returns Array of matching products
+     */
+    search: async (query: string): Promise<ProductItem[]> => {
+        const response = await api.get<ProductItem[]>('/products/search', {
+            params: { query }
+        });
+        return response.data;
+    }
+};
+
+// =========================================================
+// Deals API
+// =========================================================
+
+export const dealsAPI = {
+    /**
+     * Gets all deals
+     *
+     * @param page Page number for pagination
+     * @param perPage Items per page
+     * @returns Array of deal items
+     */
+    getAll: async (page: number = 1, perPage: number = 20): Promise<DealItem[]> => {
+        const response = await api.get<DealItem[]>('/deals', {
+            params: { page, per_page: perPage }
+        });
+        return response.data;
+    },
+
+    /**
+     * Creates a bid for a deal
+     *
+     * @param dealId Deal ID
+     * @param bidData Bid data
+     * @returns Created bid
+     */
     createBid: async (dealId: number, bidData: BidData): Promise<any> => {
         const response = await api.post(`/deals/${dealId}/bids`, bidData);
         return response.data;
     },
 
-    // ...other deal-related API calls
+    /**
+     * Gets a deal by ID
+     *
+     * @param id Deal ID
+     * @returns Deal item
+     */
+    getById: async (id: number): Promise<DealItem> => {
+        const response = await api.get<DealItem>(`/deals/${id}`);
+        return response.data;
+    },
+
+    /**
+     * Creates a new deal
+     *
+     * @param dealData Deal data
+     * @returns Created deal
+     */
+    create: async (dealData: Partial<DealItem>): Promise<DealItem> => {
+        const response = await api.post<DealItem>('/deals', dealData);
+        return response.data;
+    },
+
+    /**
+     * Gets bids for a deal
+     *
+     * @param dealId Deal ID
+     * @returns Array of bids
+     */
+    getBids: async (dealId: number): Promise<any[]> => {
+        const response = await api.get(`/deals/${dealId}/bids`);
+        return response.data;
+    }
 };
 
-// Commodities related API calls
+// =========================================================
+// Commodities API
+// =========================================================
+
 export const commoditiesAPI = {
     /**
-     * Get all commodities with their products
+     * Gets all commodities with their products
+     *
      * @param includeProducts Whether to include products in the response
-     * @returns Promise with commodities data
+     * @returns Array of commodities
      */
     getAll: async (includeProducts: boolean = true): Promise<Commodity[]> => {
-        const url = includeProducts ? '/all-categories' : '/all-categories';
+        const url = '/all-categories';
         const response = await api.get<CommoditiesResponse>(url);
         return response.data.data;
     },
 
     /**
-     * Get hierarchical tree of categories and their subcategories
-     * @returns Promise with tree-structured category data
+     * Gets hierarchical tree of categories and their subcategories
+     *
+     * @returns Tree-structured category data
      */
     getCategoryTree: async (): Promise<TreeResponse> => {
         const response = await api.get<TreeResponse>('/all-categories');
         return response.data;
     },
+
     /**
-     * Updated method for the commoditiesAPI object
-     * This handles the actual response format from your backend
+     * Gets filtered products by category and subcategory
+     *
+     * @param category Category slug
+     * @param sub_category Subcategory slug
+     * @returns Array of filtered products
      */
     getFilteredProducts: async (category?: string, sub_category?: string): Promise<Product[]> => {
         try {
@@ -275,109 +580,128 @@ export const commoditiesAPI = {
             const url = `get-filter-products?${params.toString()}`;
             const response = await api.get(url);
 
-            // Check response format and extract the products array
+            // Handle different response formats
             if (response.data) {
                 if (response.data.data && Array.isArray(response.data.data)) {
-                    // Backend returns { data: [...products], meta: {...} }
                     return response.data.data;
                 } else if (Array.isArray(response.data)) {
-                    // Backend returns direct array of products
                     return response.data;
                 }
             }
 
-            // If we reach this point, return empty array
             console.warn('Unexpected API response format');
             return [];
         } catch (error) {
             console.error('Error fetching filtered products:', error);
-            return []; // Return empty array on error
+            return [];
         }
     },
 
     /**
-     * Get a specific commodity by ID
+     * Gets a specific commodity by ID
+     *
      * @param id Commodity ID
      * @param includeProducts Whether to include products in the response
-     * @returns Promise with commodity data
+     * @returns Commodity data
      */
     getById: async (id: number, includeProducts: boolean = true): Promise<Commodity> => {
-        const url = includeProducts ? `/commodities/${id}?include=products` : `/commodities/${id}`;
+        const url = includeProducts
+            ? `/commodities/${id}?include=products`
+            : `/commodities/${id}`;
+
         const response = await api.get<{ data: Commodity }>(url);
         return response.data.data;
     },
 
     /**
-     * Get a specific commodity by slug
+     * Gets a specific commodity by slug and subcategory
+     *
      * @param slug Commodity slug
-     * @param includeProducts Whether to include products in the response
-     * @returns Promise with commodity data
+     * @param sub_category Subcategory slug
+     * @returns Commodity data
      */
-    // Update the getBySlug method in the commoditiesAPI object
     getBySlug: async (slug: string, sub_category: string): Promise<Commodity> => {
         try {
             const url = `get-filter-products?category=${slug}&sub_category=${sub_category}`;
             const response = await api.get(url);
 
-            // Check if the response has the expected structure
+            // Handle different response formats
             if (response.data && response.data.data) {
                 return response.data.data;
             } else if (response.data) {
-                // If the response is flattened without a data property
                 return response.data;
-            } else {
-                // If no valid data is returned, throw an error to trigger the fallback
-                throw new Error('Invalid response format from API');
             }
+
+            throw new Error('Invalid response format from API');
         } catch (error) {
-            console.error('Error fetching filtered products:', error);
-            // Return a minimal valid Commodity object with an empty products array
+            console.error('Error fetching commodity by slug:', error);
+            // Return a minimal valid Commodity object
             return {
                 id: 0,
                 name: slug,
                 slug: slug,
                 description: '',
                 image_url: '',
-                products: [] // Empty products array
+                products: []
             };
         }
     },
 
     /**
-     * Get products for a specific commodity
+     * Gets products for a specific commodity
+     *
      * @param commodityId Commodity ID
-     * @returns Promise with products data
+     * @returns Array of products
      */
     getProducts: async (commodityId: number): Promise<CommodityProduct[]> => {
-        const response = await api.get<{ data: CommodityProduct[] }>(`/commodities/${commodityId}/products`);
+        const response = await api.get<{ data: CommodityProduct[] }>(
+            `/commodities/${commodityId}/products`
+        );
         return response.data.data;
     },
 
     /**
-     * Get a specific product by ID
+     * Gets a specific product by ID
+     *
      * @param productId Product ID
-     * @returns Promise with product data
+     * @returns Product data
      */
     getProductById: async (productId: number): Promise<CommodityProduct> => {
-        const response = await api.get<{ data: CommodityProduct }>(`/commodity-products/${productId}`);
+        const response = await api.get<{ data: CommodityProduct }>(
+            `/commodity-products/${productId}`
+        );
         return response.data.data;
     },
 
     /**
-     * Get a specific product by slug
+     * Gets a specific product by slug
+     *
      * @param slug Product slug
-     * @returns Promise with product data
+     * @returns Product data
      */
     getProductBySlug: async (slug: string): Promise<CommodityProduct> => {
-        const response = await api.get<{ data: CommodityProduct }>(`/commodity-products/slug/${slug}`);
+        const response = await api.get<{ data: CommodityProduct }>(
+            `/commodity-products/slug/${slug}`
+        );
         return response.data.data;
     }
 };
 
-// Define the environment configuration placeholder if not exists
-// In production, make sure to create this file with the actual API URL
-export const envConfig = {
-    env: {
-        apiUrl: env?.apiUrl || 'http://localhost:8000/api'
-    }
+// =========================================================
+// Export default
+// =========================================================
+
+/**
+ * Main API client with all modules
+ */
+
+console.log(authAPI);
+const apiClient = {
+    api,
+    auth: authAPI,
+    products: productsAPI,
+    deals: dealsAPI,
+    commodities: commoditiesAPI,
 };
+
+export default apiClient;

@@ -25,6 +25,12 @@ export default defineConfig(({ mode }) => {
             port: 5173,
             open: true,
             cors: true,
+            proxy: {
+                '/api': {
+                  target: 'http://127.0.0.1:8000',
+                  changeOrigin: true,
+                },
+              },
         },
         build: {
             outDir: 'dist',

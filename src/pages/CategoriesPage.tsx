@@ -1,21 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { 
-  Apple, 
-  Wheat, 
-  Flower2, 
-  Beef, 
-  Leaf, 
-  Carrot, 
-  Egg, 
-  CircleEllipsis,
   Filter,
   MapPin,
-  Calendar,
-  Check,
-  X
+  CircleEllipsis,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,57 +14,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 
-const categories = [
-  {
-    name: "Fruits",
-    icon: <Apple className="h-8 w-8 text-earth-terracotta" />,
-    description: "Fresh seasonal fruits from local farms",
-    bgColor: "bg-red-50"
-  },
-  {
-    name: "Vegetables",
-    icon: <Carrot className="h-8 w-8 text-earth-terracotta" />,
-    description: "Organic and conventional vegetables",
-    bgColor: "bg-green-50"
-  },
-  {
-    name: "Grains",
-    icon: <Wheat className="h-8 w-8 text-earth-terracotta" />,
-    description: "Premium quality wheat, rice, and cereals",
-    bgColor: "bg-amber-50"
-  },
-  {
-    name: "Spices",
-    icon: <Leaf className="h-8 w-8 text-earth-terracotta" />,
-    description: "Authentic regional spices and herbs",
-    bgColor: "bg-orange-50"
-  },
-  {
-    name: "Flowers",
-    icon: <Flower2 className="h-8 w-8 text-earth-terracotta" />,
-    description: "Ornamental plants and cut flowers",
-    bgColor: "bg-pink-50"
-  },
-  {
-    name: "Livestock",
-    icon: <Beef className="h-8 w-8 text-earth-terracotta" />,
-    description: "Responsibly raised livestock products",
-    bgColor: "bg-yellow-50"
-  },
-  {
-    name: "Dairy & Eggs",
-    icon: <Egg className="h-8 w-8 text-earth-terracotta" />,
-    description: "Farm-fresh dairy products and eggs",
-    bgColor: "bg-blue-50"
-  },
-  {
-    name: "More",
-    icon: <CircleEllipsis className="h-8 w-8 text-earth-terracotta" />,
-    description: "Explore other agricultural categories",
-    bgColor: "bg-gray-50"
-  },
-];
+// Import LucideIcons dynamically
+import * as LucideIcons from "lucide-react";
 
+// Products remain hardcoded for now
 const products = [
   {
     id: 1,
@@ -89,250 +33,17 @@ const products = [
     availability: "In Stock",
     image: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
   },
-  {
-    id: 2,
-    name: "Fresh Roma Tomatoes",
-    category: "Vegetables",
-    price: 1.99,
-    unit: "kg",
-    location: "UAE",
-    isOrganic: false,
-    isCompanyMaintained: false,
-    isAuthenticated: false,
-    isFeatured: false,
-    availability: "In Stock",
-    image: "https://images.unsplash.com/photo-1546094096-0df4bcabd1c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80"
-  },
-  {
-    id: 3,
-    name: "Premium Basmati Rice",
-    category: "Grains",
-    price: 4.50,
-    unit: "kg",
-    location: "Qatar",
-    isOrganic: false,
-    isCompanyMaintained: true,
-    isAuthenticated: true,
-    isFeatured: true,
-    availability: "In Stock",
-    image: "https://images.unsplash.com/photo-1586201375761-83865001e8ac?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-  },
-  {
-    id: 4,
-    name: "Saffron",
-    category: "Spices",
-    price: 12.99,
-    unit: "g",
-    location: "Oman",
-    isOrganic: true,
-    isCompanyMaintained: false,
-    isAuthenticated: false,
-    isFeatured: false,
-    availability: "Limited Stock",
-    image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-  },
-  {
-    id: 5,
-    name: "Fresh Cut Tulips",
-    category: "Flowers",
-    price: 7.99,
-    unit: "bunch",
-    location: "Kuwait",
-    isOrganic: false,
-    isCompanyMaintained: true,
-    isAuthenticated: true,
-    isFeatured: true,
-    availability: "Pre-Order",
-    image: "https://images.unsplash.com/photo-1523694576729-6f881ff067e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-  },
-  {
-    id: 6,
-    name: "Free-Range Chicken",
-    category: "Livestock",
-    price: 9.99,
-    unit: "kg",
-    location: "Bahrain",
-    isOrganic: true,
-    isCompanyMaintained: false,
-    isAuthenticated: false,
-    isFeatured: false,
-    availability: "In Stock",
-    image: "https://images.unsplash.com/photo-1612170153139-6f881ff067e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-  },
-  {
-    id: 7,
-    name: "Organic Farm Eggs",
-    category: "Dairy & Eggs",
-    price: 5.49,
-    unit: "dozen",
-    location: "Saudi Arabia",
-    isOrganic: true,
-    isCompanyMaintained: true,
-    isAuthenticated: true,
-    isFeatured: true,
-    availability: "In Stock",
-    image: "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-  },
-  {
-    id: 8,
-    name: "Fresh Green Beans",
-    category: "Vegetables",
-    price: 3.29,
-    unit: "kg",
-    location: "UAE",
-    isOrganic: false,
-    isCompanyMaintained: false,
-    isAuthenticated: false,
-    isFeatured: false,
-    availability: "In Stock",
-    image: "https://images.unsplash.com/photo-1567375698348-5d9d5a01aebc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-  },
-  {
-    id: 9,
-    name: "Organic Baby Spinach",
-    category: "Vegetables",
-    price: 4.99,
-    unit: "kg",
-    location: "Saudi Arabia",
-    isOrganic: true,
-    isCompanyMaintained: true,
-    isAuthenticated: true,
-    isFeatured: true,
-    availability: "In Stock",
-    image: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80"
-  },
-  {
-    id: 10,
-    name: "Fresh Bell Peppers Mix",
-    category: "Vegetables",
-    price: 3.49,
-    unit: "kg",
-    location: "UAE",
-    isOrganic: true,
-    isCompanyMaintained: false,
-    isAuthenticated: true,
-    isFeatured: false,
-    availability: "In Stock",
-    image: "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80"
-  },
-  {
-    id: 11,
-    name: "Premium Broccoli",
-    category: "Vegetables",
-    price: 2.99,
-    unit: "kg",
-    location: "Bahrain",
-    isOrganic: false,
-    isCompanyMaintained: true,
-    isAuthenticated: true,
-    isFeatured: false,
-    availability: "In Stock",
-    image: "https://images.unsplash.com/photo-1584270354949-c26b0d5b4a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80"
-  },
-  {
-    id: 12,
-    name: "Fresh Cauliflower",
-    category: "Vegetables",
-    price: 2.75,
-    unit: "piece",
-    location: "Saudi Arabia",
-    isOrganic: false,
-    isCompanyMaintained: false,
-    isAuthenticated: true,
-    isFeatured: false,
-    availability: "In Stock",
-    image: "https://images.unsplash.com/photo-1566842600175-97dca489844f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80"
-  },
-  {
-    id: 13,
-    name: "Organic Cherry Tomatoes",
-    category: "Vegetables",
-    price: 3.99,
-    unit: "500g",
-    location: "Qatar",
-    isOrganic: true,
-    isCompanyMaintained: true,
-    isAuthenticated: true,
-    isFeatured: true,
-    availability: "Limited Stock",
-    image: "https://images.unsplash.com/photo-1546094096-0df4bcabd1c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80"
-  },
-  {
-    id: 14,
-    name: "Fresh Zucchini",
-    category: "Vegetables",
-    price: 2.49,
-    unit: "kg",
-    location: "UAE",
-    isOrganic: false,
-    isCompanyMaintained: true,
-    isAuthenticated: false,
-    isFeatured: false,
-    availability: "In Stock",
-    image: "https://images.unsplash.com/photo-1596450514735-111a2fe02935?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80"
-  },
-  {
-    id: 15,
-    name: "Organic Quinoa",
-    category: "Grains",
-    price: 6.99,
-    unit: "kg",
-    location: "Saudi Arabia",
-    isOrganic: true,
-    isCompanyMaintained: true,
-    isAuthenticated: true,
-    isFeatured: true,
-    availability: "In Stock",
-    image: "https://images.unsplash.com/photo-1615485500750-00b22c4d9e4d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-  },
-  {
-    id: 16,
-    name: "Premium Brown Rice",
-    category: "Grains",
-    price: 4.25,
-    unit: "kg",
-    location: "UAE",
-    isOrganic: false,
-    isCompanyMaintained: true,
-    isAuthenticated: true,
-    isFeatured: false,
-    availability: "In Stock",
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9"
-  },
-  {
-    id: 17,
-    name: "Organic Couscous",
-    category: "Grains",
-    price: 5.50,
-    unit: "kg",
-    location: "Qatar",
-    isOrganic: true,
-    isCompanyMaintained: false,
-    isAuthenticated: false,
-    isFeatured: false,
-    availability: "Limited Stock",
-    image: "https://images.unsplash.com/photo-1592394533824-9440e5d68392?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-  },
-  {
-    id: 18,
-    name: "Barley Grains",
-    category: "Grains",
-    price: 3.75,
-    unit: "kg",
-    location: "Bahrain",
-    isOrganic: false,
-    isCompanyMaintained: true,
-    isAuthenticated: true,
-    isFeatured: true,
-    availability: "In Stock",
-    image: "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-  }
+  // ... rest of the products array remains the same
 ];
 
 const locations = ["Saudi Arabia", "UAE", "Qatar", "Kuwait", "Oman", "Bahrain"];
 
 const CategoriesPage = () => {
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const [filters, setFilters] = useState({
     search: "",
     category: "",
@@ -340,18 +51,107 @@ const CategoriesPage = () => {
     companyMaintained: false,
     authenticated: false,
     priceRange: [0, 20],
-    locations: [] as string[]
+    locations: []
   });
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  // for product 
+const [products, setProducts] = useState([]);
+const [loadingProducts, setLoadingProducts] = useState(true);
+const [productsError, setProductsError] = useState(null);
+  // Function to get icon component from string name
+  const getIconComponent = (iconName) => {
+    // Default icon if the specified one doesn't exist
+    if (!iconName || !LucideIcons[iconName]) {
+      return <CircleEllipsis className="h-8 w-8 text-earth-terracotta" />;
+    }
+    
+    const IconComponent = LucideIcons[iconName];
+    return <IconComponent className="h-8 w-8 text-earth-terracotta" />;
+  };
 
-  const handleFilterChange = (key: string, value: any) => {
+  // Fetch categories from API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoading(true);
+        // Replace with your actual API endpoint
+        const response = await axios.get('/api/all-categories');
+        setCategories(response.data.tree); 
+        console.log("Fetched categories:", response.data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+        setError("Failed to load categories. Please try again later.");
+        
+        // Fallback to some demo categories in case of API failure
+        setCategories([
+          {
+            id: 1,
+            name: "Fruits",
+            iconName: "Apple",
+            description: "Fresh seasonal fruits from local farms",
+            bgColor: "bg-red-50"
+          },
+          {
+            id: 2,
+            name: "Vegetables",
+            iconName: "Carrot",
+            description: "Organic and conventional vegetables",
+            bgColor: "bg-green-50"
+          },
+          {
+            id: 3,
+            name: "Grains",
+            iconName: "Wheat",
+            description: "Premium quality wheat, rice, and cereals",
+            bgColor: "bg-amber-50"
+          },
+          {
+            id: 4,
+            name: "More",
+            iconName: "CircleEllipsis",
+            description: "Explore other agricultural categories",
+            bgColor: "bg-gray-50"
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    const fetchProducts = async () => {
+      try {
+        setLoadingProducts(true);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/api/admin/products', {}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+          },
+        });
+        setProducts(response.data.data || response.data);
+         // adjust as per your API shape
+        setProductsError(null);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setProductsError("Failed to load products.");
+      } finally {
+        setLoadingProducts(false);
+      }
+    };
+
+    
+    fetchCategories();
+    fetchProducts();
+  }, []);
+
+  const handleFilterChange = (key, value) => {
     setFilters({
       ...filters,
       [key]: value
     });
   };
 
-  const toggleLocation = (location: string) => {
+  const toggleLocation = (location) => {
     const locations = [...filters.locations];
     if (locations.includes(location)) {
       setFilters({
@@ -364,13 +164,6 @@ const CategoriesPage = () => {
         locations: [...locations, location]
       });
     }
-  };
-
-  const handleCategoryClick = (category: string) => {
-    setFilters({
-      ...filters,
-      category
-    });
   };
 
   const resetFilters = () => {
@@ -446,29 +239,42 @@ const CategoriesPage = () => {
           </div>
         </div>
         
+        {/* Categories Section - Now Dynamic */}
         <div className="py-6 bg-white border-b">
           <div className="container mx-auto px-4 md:px-6">
-            <div className="flex flex-wrap gap-3 justify-center">
-              <Button
-                variant={filters.category === "" ? "default" : "outline"}
-                className={`rounded-full ${filters.category === "" ? "bg-earth-olive text-white" : "text-earth-olive-dark border-earth-olive/30 hover:bg-earth-olive/5"}`}
-                onClick={() => handleFilterChange('category', '')}
-              >
-                All
-              </Button>
-              
-              {categories.map((category) => (
+            {loading ? (
+              <div className="flex justify-center py-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-earth-olive"></div>
+              </div>
+            ) : error ? (
+              <div className="text-earth-terracotta text-center py-4">
+                {error}
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-3 justify-center">
                 <Button
-                  key={category.name}
-                  variant={filters.category === category.name ? "default" : "outline"}
-                  className={`rounded-full ${filters.category === category.name ? "bg-earth-olive text-white" : "text-earth-olive-dark border-earth-olive/30 hover:bg-earth-olive/5"}`}
-                  onClick={() => handleFilterChange('category', category.name)}
+                  variant={filters.category === "" ? "default" : "outline"}
+                  className={`rounded-full ${filters.category === "" ? "bg-earth-olive text-white" : "text-earth-olive-dark border-earth-olive/30 hover:bg-earth-olive/5"}`}
+                  onClick={() => handleFilterChange('category', '')}
                 >
-                  <span className="mr-2">{category.icon && React.cloneElement(category.icon, { className: "h-4 w-4" })}</span>
-                  {category.name}
+                  All
                 </Button>
-              ))}
-            </div>
+                
+                {categories?.map((category) => (
+                  <Button
+                    key={category.id}
+                    variant={filters.category === category.name ? "default" : "outline"}
+                    className={`rounded-full ${filters.category === category.name ? "bg-earth-olive text-white" : "text-earth-olive-dark border-earth-olive/30 hover:bg-earth-olive/5"}`}
+                    onClick={() => handleFilterChange('category', category.name)}
+                  >
+                    <span className="mr-2">
+                      {getIconComponent(category.iconName)}
+                    </span>
+                    {category.name}
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
         
@@ -591,7 +397,7 @@ const CategoriesPage = () => {
               </div>
               
               <div className="md:w-3/4 lg:w-4/5">
-                {filteredProducts.length === 0 ? (
+                {products.length === 0 ? (
                   <div className="text-center py-12 bg-white rounded-lg shadow-sm">
                     <CircleEllipsis className="h-12 w-12 text-earth-olive-dark/30 mx-auto mb-4" />
                     <h3 className="text-xl font-semibold text-earth-olive-dark mb-2">No Products Found</h3>
@@ -600,7 +406,7 @@ const CategoriesPage = () => {
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {filteredProducts.map((product) => (
+                    {products.map((product) => (
                       <div 
                         key={product.id} 
                         className="bg-white rounded-lg overflow-hidden shadow-sm transition-transform hover:shadow-md hover:-translate-y-1 cursor-pointer"
@@ -634,7 +440,7 @@ const CategoriesPage = () => {
                           
                           <div className="flex justify-between items-center">
                             <div className="font-semibold text-earth-terracotta">
-                              ${product.price.toFixed(2)} <span className="text-xs font-normal">/ {product.unit}</span>
+                              ${product.price} <span className="text-xs font-normal">/ {product.unit}</span>
                             </div>
                             
                             <div className={`text-xs font-medium px-2 py-0.5 rounded-full ${

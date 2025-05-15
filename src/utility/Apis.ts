@@ -27,7 +27,7 @@ export interface User {
     roles?: Role[];
 }
 
-export interface UserProfile {
+interface UserProfile {
     id: number;
     user_id: number;
     first_name: string;
@@ -187,6 +187,12 @@ export interface TreeResponse {
     tree: TreeCategory[];
 }
 
+/**
+ * Error related interfaces
+ */
+export interface ErrorResponse {
+    message: string;
+    status: number;
 /**
  * Error related interfaces
  */
@@ -459,6 +465,52 @@ export const productsAPI = {
         return response.data;
     },
 
+    /**
+     * Creates a new product
+     *
+     * @param productData Product data
+     * @returns Created product
+     */
+    create: async (productData: Partial<ProductItem>): Promise<ProductItem> => {
+        const response = await api.post<ProductItem>('/products', productData);
+        return response.data;
+    },
+
+    /**
+     * Updates a product
+     *
+     * @param id Product ID
+     * @param productData Updated product data
+     * @returns Updated product
+     */
+    update: async (id: number, productData: Partial<ProductItem>): Promise<ProductItem> => {
+        const response = await api.put<ProductItem>(`/products/${id}`, productData);
+        return response.data;
+    },
+
+    /**
+     * Deletes a product
+     *
+     * @param id Product ID
+     * @returns Success message
+     */
+    delete: async (id: number): Promise<{ message: string }> => {
+        const response = await api.delete<{ message: string }>(`/products/${id}`);
+        return response.data;
+    },
+
+    /**
+     * Searches for products
+     *
+     * @param query Search query
+     * @returns Array of matching products
+     */
+    search: async (query: string): Promise<ProductItem[]> => {
+        const response = await api.get<ProductItem[]>('/products/search', {
+            params: { query }
+        });
+        return response.data;
+    }
     /**
      * Creates a new product
      *

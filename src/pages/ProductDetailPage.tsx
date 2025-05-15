@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -7,75 +7,52 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, Heart, Share2, Star, Shield, Truck, Award, Calendar, Info, ArrowLeft, AlertCircle, X, ChevronLeft, ChevronRight, Expand } from "lucide-react";
-import { ShieldCheck, Leaf, Building } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { ShoppingCart, Heart, Share2, Star, Shield, Truck, Award, Info, X, ChevronLeft, ChevronRight, Expand, ShieldCheck, Leaf, Building } from "lucide-react";
 import ProductInterestButtons, { openInterestDialog, openQuoteDialog } from "@/components/ProductInterestButtons";
 import { useCart } from "@/contexts/CartContext";
-import { useAuth } from "@/contexts/AuthContext";
+import apiClient from '@/utility/Apis.ts';
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  unit: string;
+  rating: number;
+  reviews: number;
+  images: string[];
+  category: string;
+  organic?: boolean;
+  availability: string;
+  minQuantity: number;
+  seller: string;
+  location: string;
+  isAuthenticated?: boolean;
+  isCompanyMaintained?: boolean;
+  isPartnerFarm?: boolean;
+  description: string;
+  specifications: { name: string; value: string }[];
+}
 
 const ProductDetailPage = () => {
   const { productId } = useParams();
-  const navigate = useNavigate();
   const { toast } = useToast();
   const { addToCart } = useCart();
-  const { user, isAuthenticated } = useAuth();
   const [quantity, setQuantity] = useState(1);
   const [showShippingInfo, setShowShippingInfo] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [showAuthAlert, setShowAuthAlert] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [imageViewerOpen, setImageViewerOpen] = useState(false);
-  
-  // Commission rate (5% in this example)
+  const [loading, setLoading] = useState<boolean>(false);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
   const COMMISSION_RATE = 0.05;
-  
-  // Base shipping rate and per kg/unit rate
   const BASE_SHIPPING_RATE = 50;
   const PER_UNIT_SHIPPING_RATE = 0.15;
 
-  // Mock product data - in a real app this would be fetched from an API
-  const product = {
-    id: productId,
-    name: "Premium Organic Red Apples",
-    category: "Fruits",
-    price: 12.99,
-    unit: "kg",
-    seller: "Green Valley Farms",
-    location: "Saudi Arabia",
-    rating: 4.8,
-    reviews: 124,
-    availability: "In Stock",
-    organic: true,
-    minQuantity: 10, // Minimum order quantity for B2B
-    description: "These premium organic red apples are grown using sustainable farming practices. Perfect balance of sweetness and tartness, ideal for eating fresh, baking, or juicing. Harvested at peak ripeness to ensure maximum flavor and nutritional value.",
-    images: [
-      "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
-      "https://images.unsplash.com/photo-1570913149827-d2ac84ab3f9a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-      "https://images.unsplash.com/photo-1600423115367-87ea7661688f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1025&q=80"
-    ],
-    specifications: [
-      { name: "Variety", value: "Honeycrisp" },
-      { name: "Taste Profile", value: "Sweet with mild tartness" },
-      { name: "Appearance", value: "Bright red with yellow spots" },
-      { name: "Size", value: "Medium to Large (7-9 cm diameter)" },
-      { name: "Origin", value: "Al-Baha Region, Saudi Arabia" },
-      { name: "Cultivation Method", value: "Organic" },
-      { name: "Harvested", value: "1 week ago" },
-      { name: "Shelf Life", value: "2-3 weeks refrigerated" },
-      { name: "Minimum Order", value: "10 kg (B2B)" }
-    ],
-    isAuthenticated: true,
-    isCompanyMaintained: false,
-    isPartnerFarm: true,
-  };
-
-  // Calculate order summary
   const [orderSummary, setOrderSummary] = useState({
     subtotal: 0,
     shippingCost: 0,
@@ -84,21 +61,39 @@ const ProductDetailPage = () => {
   });
 
   useEffect(() => {
+    const fetchProductDetails = async () => {
+      if (!productId) return;
+      setLoading(true);
+      try {
+        const productData = await apiClient.products.getProductDetail(productId);
+        if (productData) {
+          setProduct(productData);
+          if (productData.minQuantity && productData.minQuantity > 0) {
+            setQuantity(productData.minQuantity);
+          }
+        } else {
+          setError("Product not found");
+        }
+      } catch (err) {
+        console.error("Error fetching product details:", err);
+        setError("Failed to load product details. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProductDetails();
+  }, [productId]);
+
+  useEffect(() => {
+    if (!product) return;
     const subtotal = quantity * product.price;
     const shippingCost = calculateShipping(quantity);
     const commission = subtotal * COMMISSION_RATE;
     const total = subtotal + shippingCost;
-    
-    setOrderSummary({
-      subtotal,
-      shippingCost,
-      commission,
-      total,
-    });
-  }, [quantity, product.price]);
+    setOrderSummary({ subtotal, shippingCost, commission, total });
+  }, [quantity, product]);
 
   const calculateShipping = (quantity: number) => {
-    // Base rate plus per unit rate
     return BASE_SHIPPING_RATE + (quantity * PER_UNIT_SHIPPING_RATE);
   };
 
@@ -107,63 +102,39 @@ const ProductDetailPage = () => {
   };
 
   const decrementQuantity = () => {
-    if (quantity > product.minQuantity) {
+    if (product && quantity > product.minQuantity) {
       setQuantity(prev => prev - 1);
     }
   };
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
-    if (!isNaN(value) && value >= product.minQuantity) {
+    if (!isNaN(value) && product && value >= product.minQuantity) {
       setQuantity(value);
     }
   };
 
-  const handleRequireAuth = (action: string) => {
-    if (!isAuthenticated) {
-      setShowAuthAlert(true);
-      return true;
-    }
-    return false;
-  };
-
   const handleAddToCart = () => {
-  /*  if (handleRequireAuth('add to cart')) {
-      return;
-    }*/
-    
-    // Add to cart functionality using the CartContext
+    if (!product) return;
     addToCart({
-      id: product.id as string,
+      id: product.id,
       type: "product",
       name: product.name,
       price: product.price,
-      quantity: quantity,
+      quantity,
       unit: product.unit,
       image: product.images[0],
-      sellerId: "seller-id", // In a real app, this would come from the product data
-      sellerName: product.seller
+      sellerId: "seller-id",
+      sellerName: product.seller,
     });
-    
-    // Show the confirmation dialog first, then the toast will appear after dialog is closed
     setShowConfirm(true);
   };
 
   const finalizeOrder = async () => {
-   /* if (handleRequireAuth('complete order')) {
-      return;
-    }*/
-    
     setIsSubmitting(true);
-    
     try {
-      // In a real app, this would submit to your database or cart system
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Close the dialog first
       setShowConfirm(false);
-      
-      // Small delay before showing the toast to prevent overlap
       setTimeout(() => {
         toast({
           title: "Added to Cart",
@@ -171,13 +142,8 @@ const ProductDetailPage = () => {
           duration: 5000,
         });
       }, 300);
-      
-      // Normally you would redirect to the cart page
-      // navigate('/cart');
     } catch (error) {
       setShowConfirm(false);
-      
-      // Small delay before showing error toast
       setTimeout(() => {
         toast({
           title: "Error",
@@ -197,24 +163,16 @@ const ProductDetailPage = () => {
   };
 
   const navigateImages = (direction: 'next' | 'prev') => {
-    if (direction === 'next') {
-      setSelectedImageIndex((prev) => 
-        prev === product.images.length - 1 ? 0 : prev + 1
-      );
-    } else {
-      setSelectedImageIndex((prev) => 
-        prev === 0 ? product.images.length - 1 : prev - 1
-      );
-    }
+    if (!product || !product.images.length) return;
+    setSelectedImageIndex(prev => {
+      if (direction === 'next') return prev === product.images.length - 1 ? 0 : prev + 1;
+      return prev === 0 ? product.images.length - 1 : prev - 1;
+    });
   };
 
-  const redirectToSignIn = () => {
-    // Store the current URL in session storage so we can redirect back after login
-    sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
-    navigate('/signin');
-    setShowAuthAlert(false);
-  };
-
+  if (loading) return <div className="p-6 text-center">Loading...</div>;
+  if (error) return <div className="p-6 text-center text-red-500">{error}</div>;
+  if (!product) return null;
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -229,8 +187,8 @@ const ProductDetailPage = () => {
             >
               <AspectRatio ratio={4/3}>
                 <img 
-                  src={product.images[selectedImageIndex]} 
-                  alt={product.name} 
+                  src={product?.images[selectedImageIndex]}
+                  alt={product?.name}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </AspectRatio>
@@ -645,7 +603,7 @@ const ProductDetailPage = () => {
       </Dialog>
       
       {/* Authentication Alert Dialog */}
-      <Dialog open={showAuthAlert} onOpenChange={setShowAuthAlert}>
+     {/* <Dialog open={showAuthAlert} onOpenChange={setShowAuthAlert}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center">Authentication Required</DialogTitle>
@@ -675,7 +633,7 @@ const ProductDetailPage = () => {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+      </Dialog>*/}
       
       {/* Shipping Info Sheet */}
       <Sheet open={showShippingInfo} onOpenChange={setShowShippingInfo}>

@@ -70,3 +70,13 @@ export interface ProductDisplayItem {
     image: string | null;
 
 }
+
+
+export interface FeaturedProduct {
+    id: number;
+    title: string;
+    price: string;
+    unit: string;
+    image: string;
+    category: string;
+}

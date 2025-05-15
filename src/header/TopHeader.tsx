@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Container, Dropdown, Image } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthProvider";
+import { useAuth } from "@contexts/AuthContext.tsx";
 import { useTranslation } from "react-i18next";
 
 // Import images from src/assets
@@ -20,7 +20,7 @@ export default function TopHeader() {
 
     const [language, setLanguage] = useState(languages[0]);
 
-    // Use the auth context instead of local state
+    // Use the auth contexts instead of local state
     const { isAuthenticated, logout: handleLogout } = useAuth();
     const navigate = useNavigate();
 

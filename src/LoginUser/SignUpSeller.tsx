@@ -71,8 +71,7 @@ const SignUpSeller = () => {
             };
 
             const response = await axios.post("http://apnafarm.com/api/b2b/register", apiData);
-            console.log("Registration successful:", response.data);
-            navigate("/login", {
+             navigate("/login", {
                 state: {
                     message: "Registration successful! Please log in.",
                 },

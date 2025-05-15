@@ -34,6 +34,13 @@ interface FormattedCommodity {
     products: CommodityProduct[];
 }
 
+// Import the TreeResponse type from your APIs or types file
+// If it's not exported directly, you'll need to add an export in that file
+// import { TreeResponse, TreeCategory } from "../utility/types.ts";
+
+// If you can't import it, remove your local declaration and adjust the code below
+// to work with the existing type
+
 // Fallback data in case API fails
 const fallbackCommodities: FormattedCommodity[] = [
     {
@@ -102,7 +109,7 @@ const CommoditiesTabs: React.FC = () => {
                 setLoading(true);
 
                 // Use your existing API utility to get the tree data
-                const treeData: TreeResponse = await commoditiesAPI.getCategoryTree();
+                const treeData = await commoditiesAPI.getCategoryTree();
 
                 if (treeData && treeData.tree && treeData.tree.length > 0) {
                     // Format the tree data to match the component's expected structure

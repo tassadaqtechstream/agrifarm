@@ -1,5 +1,3 @@
-
-
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import { env } from '../config/env';
 
@@ -7,8 +5,8 @@ import { env } from '../config/env';
  * Environment configuration
  */
 export const envCont = {
-    apiUrl:env.apiUrl || 'http://localhost:8000/api',
-    apiVersion: env?.API_VERSION || 'v1',
+    apiUrl: env.apiUrl || 'http://localhost:8000/api',
+    apiVersion: env.apiVersion || 'v1',
 };
 
 // =========================================================
@@ -77,7 +75,6 @@ export interface ProductItem {
     id: number;
     name: string;
     description: string;
-    // Add other product fields as needed
 }
 
 export interface ApiData {
@@ -115,19 +112,18 @@ export interface FeaturedProduct {
     image: string;
     category: string;
 }
+
 /**
  * Deal related interfaces
  */
 export interface DealItem {
     id: number;
     title: string;
-    // Add other deal fields as needed
 }
 
 export interface BidData {
     amount: number;
     notes?: string;
-    // Add other bid fields as needed
 }
 
 /**
@@ -193,13 +189,8 @@ export interface TreeResponse {
 export interface ErrorResponse {
     message: string;
     status: number;
-/**
- * Error related interfaces
- */
-export interface ErrorResponse {
-    message: string;
-    status: number;
 }
+
 export interface ProductDetail {
     id: string | number;
     name: string;
@@ -231,8 +222,23 @@ export interface ProductDetail {
     };
 }
 // =========================================================
-// API Client Core
+// Helper function to ensure /b2b/ prefix in URLs
 // =========================================================
+
+const ensureB2BPrefix = (url: string): string => {
+    // Skip if URL already starts with /b2b/
+    if (url.startsWith('/b2b/')) {
+        return url;
+    }
+
+    // Skip if URL already starts with /
+    if (url.startsWith('/')) {
+        return `/b2b${url}`;
+    }
+
+    // If URL doesn't start with /, add /b2b/
+    return `/b2b/${url}`;
+};
 
 /**
  * Creates and configures the API client with interceptors
@@ -252,7 +258,7 @@ export const createApiClient = (): AxiosInstance => {
         (config: InternalAxiosRequestConfig) => {
             const token = localStorage.getItem('token');
             if (token) {
-                config.headers = config.headers || {};
+                config.headers = (config.headers || {}) as any;
                 config.headers.Authorization = `Bearer ${token}`;
             }
             return config;
@@ -266,43 +272,20 @@ export const createApiClient = (): AxiosInstance => {
         (error) => {
             if (error.response) {
                 const { status, data } = error.response;
-
-                // Handle authentication errors
                 if (status === 401) {
-                 /*   localStorage.removeItem('token');
-                    localStorage.removeItem('user');
-                    window.location.href = '/login';*/
+                    // Authentication error handling
                 }
-
-                // Handle validation errors
                 if (status === 422) {
-                    return Promise.reject({
-                        ...data,
-                        isValidationError: true
-                    });
+                    return Promise.reject({ ...data, isValidationError: true });
                 }
-
-                // Handle rate limiting
                 if (status === 429) {
-                    return Promise.reject({
-                        message: 'Too many requests. Please try again later.',
-                        status,
-                    });
+                    return Promise.reject({ message: 'Too many requests. Please try again later.', status });
                 }
-
-                // Handle server errors
                 if (status >= 500) {
-                    return Promise.reject({
-                        message: 'Server error. Please try again later.',
-                        status,
-                        originalError: data,
-                    });
+                    return Promise.reject({ message: 'Server error. Please try again later.', status, originalError: data });
                 }
-
                 return Promise.reject(data);
             }
-
-            // Handle network errors
             return Promise.reject({
                 message: 'Network error. Please check your connection.',
                 isNetworkError: true,
@@ -321,79 +304,34 @@ export const api = createApiClient();
 // =========================================================
 
 export const authAPI = {
-    /**
-     * Authenticates a user with email and password
-     *
-     * @param email User email
-     * @param password User password
-     * @returns Login response with token and user data
-     */
     login: async (email: string, password: string): Promise<LoginResponse> => {
         const response = await api.post<LoginResponse>('/b2b/login', { email, password });
-
-        // Store authentication data
         if (response.data && response.data.token) {
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('user', JSON.stringify(response.data.user));
         }
-
         return response.data;
     },
-
-    /**
-     * Logs out the current user
-     */
     logout: async (): Promise<void> => {
         try {
-            await api.post('/logout');
+            await api.post(ensureB2BPrefix('/logout'));
         } catch (error) {
             console.error('Logout API error:', error);
         } finally {
-            // Always clear local storage
             localStorage.removeItem('token');
             localStorage.removeItem('user');
         }
     },
-
-    /**
-     * Initiates password reset flow
-     *
-     * @param email User email
-     * @returns Response message
-     */
     forgotPassword: async (email: string): Promise<{ message: string }> => {
-        const response = await api.post<{ message: string }>('/password/reset', { email });
+        const response = await api.post<{ message: string }>(ensureB2BPrefix('/password/reset'), { email });
         return response.data;
     },
-
-    /**
-     * Registers a new user
-     *
-     * @param formData User registration data
-     * @param userType Type of user (seller or buyer)
-     * @returns Response message
-     */
     signup: async (formData: SignupFormData, userType?: 'seller' | 'buyer'): Promise<{ message: string }> => {
-        // Determine user type
-        const apiData = {
-            ...formData,
-            user_type: userType || formData.user_type || 'seller'
-        };
-
-        // Choose the correct endpoint
-        const endpoint = apiData.user_type === 'buyer'
-            ? '/b2b/register-buyer'
-            : '/b2b/register';
-
+        const apiData = { ...formData, user_type: userType || formData.user_type || 'seller' };
+        const endpoint = apiData.user_type === 'buyer' ? '/b2b/register-buyer' : '/b2b/register';
         const response = await api.post<{ message: string }>(endpoint, apiData);
         return response.data;
     },
-
-    /**
-     * Gets the current authenticated user
-     *
-     * @returns User data or null if not authenticated
-     */
     getCurrentUser: (): User | null => {
         const userJson = localStorage.getItem('user');
         if (userJson) {
@@ -406,31 +344,12 @@ export const authAPI = {
         }
         return null;
     },
-
-    /**
-     * Checks if user is authenticated
-     *
-     * @returns Boolean indicating authentication status
-     */
-    isAuthenticated: (): boolean => {
-        return !!localStorage.getItem('token');
-    },
-
-    /**
-     * Updates user profile
-     *
-     * @param userId User ID
-     * @param profileData Updated profile data
-     * @returns Updated user data
-     */
+    isAuthenticated: (): boolean => !!localStorage.getItem('token'),
     updateProfile: async (userId: number, profileData: Partial<UserProfile>): Promise<User> => {
-        const response = await api.put<{ data: User }>(`/users/${userId}/profile`, profileData);
-
-        // Update stored user data
+        const response = await api.put<{ data: User }>(ensureB2BPrefix(`/users/${userId}/profile`), profileData);
         if (response.data && response.data.data) {
             localStorage.setItem('user', JSON.stringify(response.data.data));
         }
-
         return response.data.data;
     }
 };
@@ -440,148 +359,42 @@ export const authAPI = {
 // =========================================================
 
 export const productsAPI = {
-    /**
-     * Gets all products
-     *
-     * @param page Page number for pagination
-     * @param perPage Items per page
-     * @returns Array of product items
-     */
-    getAll: async (page: number = 1, perPage: number = 20): Promise<ProductItem[]> => {
-        const response = await api.get<ProductItem[]>('/products', {
-            params: { page, per_page: perPage }
-        });
+    getAllProducts: async (page: number = 1, perPage: number = 20): Promise<ProductItem[]> => {
+        const response = await api.get<ProductItem[]>(ensureB2BPrefix('/get-all-products'), { params: { page, per_page: perPage } });
         return response.data;
     },
-
-    /**
-     * Gets a product by ID
-     *
-     * @param id Product ID
-     * @returns Product item
-     */
     getById: async (id: number): Promise<ProductItem> => {
-        const response = await api.get<ProductItem>(`/products/${id}`);
+        const response = await api.get<ProductItem>(ensureB2BPrefix(`/products/${id}`));
         return response.data;
     },
-
-    /**
-     * Creates a new product
-     *
-     * @param productData Product data
-     * @returns Created product
-     */
     create: async (productData: Partial<ProductItem>): Promise<ProductItem> => {
-        const response = await api.post<ProductItem>('/products', productData);
+        const response = await api.post<ProductItem>(ensureB2BPrefix('/products'), productData);
         return response.data;
     },
-
-    /**
-     * Updates a product
-     *
-     * @param id Product ID
-     * @param productData Updated product data
-     * @returns Updated product
-     */
     update: async (id: number, productData: Partial<ProductItem>): Promise<ProductItem> => {
-        const response = await api.put<ProductItem>(`/products/${id}`, productData);
+        const response = await api.put<ProductItem>(ensureB2BPrefix(`/products/${id}`), productData);
         return response.data;
     },
-
-    /**
-     * Deletes a product
-     *
-     * @param id Product ID
-     * @returns Success message
-     */
     delete: async (id: number): Promise<{ message: string }> => {
-        const response = await api.delete<{ message: string }>(`/products/${id}`);
+        const response = await api.delete<{ message: string }>(ensureB2BPrefix(`/products/${id}`));
         return response.data;
     },
-
-    /**
-     * Searches for products
-     *
-     * @param query Search query
-     * @returns Array of matching products
-     */
     search: async (query: string): Promise<ProductItem[]> => {
-        const response = await api.get<ProductItem[]>('/products/search', {
-            params: { query }
-        });
-        return response.data;
-    }
-    /**
-     * Creates a new product
-     *
-     * @param productData Product data
-     * @returns Created product
-     */
-    create: async (productData: Partial<ProductItem>): Promise<ProductItem> => {
-        const response = await api.post<ProductItem>('/products', productData);
+        const response = await api.get<ProductItem[]>(ensureB2BPrefix('/products/search'), { params: { query } });
         return response.data;
     },
-
-    /**
-     * Updates a product
-     *
-     * @param id Product ID
-     * @param productData Updated product data
-     * @returns Updated product
-     */
-    update: async (id: number, productData: Partial<ProductItem>): Promise<ProductItem> => {
-        const response = await api.put<ProductItem>(`/products/${id}`, productData);
-        return response.data;
-    },
-
-    /**
-     * Deletes a product
-     *
-     * @param id Product ID
-     * @returns Success message
-     */
-    delete: async (id: number): Promise<{ message: string }> => {
-        const response = await api.delete<{ message: string }>(`/products/${id}`);
-        return response.data;
-    },
-
-    /**
-     * Searches for products
-     *
-     * @param query Search query
-     * @returns Array of matching products
-     */
-    search: async (query: string): Promise<ProductItem[]> => {
-        const response = await api.get<ProductItem[]>('/products/search', {
-            params: { query }
-        });
-        return response.data;
-    },
-
-    /**
-     * Gets featured products
-     *
-     * @returns Array of featured products
-     */
     getFeatured: async (): Promise<FeaturedProduct[]> => {
         try {
-            const response = await api.get<{status: string, data: FeaturedProduct[]}>('/b2b/products/featured');
+            const response = await api.get<{ status: string, data: FeaturedProduct[] }>('/b2b/products/featured');
             return response.data.data;
         } catch (error) {
             console.error('Error fetching featured products:', error);
             return [];
         }
     },
-    /**
-     * Gets detailed product information
-     *
-     * @param id Product ID
-     * @returns Detailed product information
-     */
     getProductDetail: async (id: string | number): Promise<ProductDetail | null> => {
         try {
-            const response = await api.get<{status: string, data: ProductDetail}>(`/b2b/products/${id}`);
-
+            const response = await api.get<{ status: string, data: ProductDetail }>(`/b2b/products/${id}`);
             if (response.data.status === 'success') {
                 return response.data.data;
             }
@@ -593,116 +406,93 @@ export const productsAPI = {
     },
 };
 
+
+// Add these to your API client utility file (src/utility/Apis.ts)
+
+// Order service functions
+const orders = {
+    // Create a new order
+    createOrder: async (orderData) => {
+        try {
+            const response = await api.post('/b2b/orders', orderData);
+            return response.data;
+        } catch (error) {
+            console.error('Error creating order:', error);
+            throw error;
+        }
+    },
+
+    // Get order details by ID
+    getOrderDetails: async (orderId) => {
+        try {
+            const response = await api.get(`/b2b/orders/${orderId}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error fetching order ${orderId}:`, error);
+            throw error;
+        }
+    },
+
+    // Get all orders for the current user
+    getUserOrders: async () => {
+        try {
+            const response = await api.get('/api/user/orders');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching user orders:', error);
+            throw error;
+        }
+    }
+};
+
+
 // =========================================================
 // Deals API
 // =========================================================
 
 export const dealsAPI = {
-    /**
-     * Gets all deals
-     *
-     * @param page Page number for pagination
-     * @param perPage Items per page
-     * @returns Array of deal items
-     */
     getAll: async (page: number = 1, perPage: number = 20): Promise<DealItem[]> => {
-        const response = await api.get<DealItem[]>('/deals', {
-            params: { page, per_page: perPage }
-        });
+        const response = await api.get<DealItem[]>(ensureB2BPrefix('/deals'), { params: { page, per_page: perPage } });
         return response.data;
     },
-
-    /**
-     * Creates a bid for a deal
-     *
-     * @param dealId Deal ID
-     * @param bidData Bid data
-     * @returns Created bid
-     */
     createBid: async (dealId: number, bidData: BidData): Promise<any> => {
-        const response = await api.post(`/deals/${dealId}/bids`, bidData);
+        const response = await api.post(ensureB2BPrefix(`/deals/${dealId}/bids`), bidData);
         return response.data;
     },
-
-    /**
-     * Gets a deal by ID
-     *
-     * @param id Deal ID
-     * @returns Deal item
-     */
     getById: async (id: number): Promise<DealItem> => {
-        const response = await api.get<DealItem>(`/deals/${id}`);
+        const response = await api.get<DealItem>(ensureB2BPrefix(`/deals/${id}`));
         return response.data;
     },
-
-    /**
-     * Creates a new deal
-     *
-     * @param dealData Deal data
-     * @returns Created deal
-     */
     create: async (dealData: Partial<DealItem>): Promise<DealItem> => {
-        const response = await api.post<DealItem>('/deals', dealData);
+        const response = await api.post<DealItem>(ensureB2BPrefix('/deals'), dealData);
         return response.data;
     },
-
-    /**
-     * Gets bids for a deal
-     *
-     * @param dealId Deal ID
-     * @returns Array of bids
-     */
     getBids: async (dealId: number): Promise<any[]> => {
-        const response = await api.get(`/deals/${dealId}/bids`);
+        const response = await api.get(ensureB2BPrefix(`/deals/${dealId}/bids`));
         return response.data;
     }
 };
-
 // =========================================================
 // Commodities API
 // =========================================================
 
 export const commoditiesAPI = {
-    /**
-     * Gets all commodities with their products
-     *
-     * @param includeProducts Whether to include products in the response
-     * @returns Array of commodities
-     */
     getAll: async (includeProducts: boolean = true): Promise<Commodity[]> => {
-        const url = '/all-categories';
+        const url = ensureB2BPrefix('/all-categories');
         const response = await api.get<CommoditiesResponse>(url);
         return response.data.data;
     },
-
-    /**
-     * Gets hierarchical tree of categories and their subcategories
-     *
-     * @returns Tree-structured category data
-     */
     getCategoryTree: async (): Promise<TreeResponse> => {
-        const response = await api.get<TreeResponse>('/all-categories');
+        const response = await api.get<TreeResponse>(ensureB2BPrefix('/all-categories'));
         return response.data;
     },
-
-    /**
-     * Gets filtered products by category and subcategory
-     *
-     * @param category Category slug
-     * @param sub_category Subcategory slug
-     * @returns Array of filtered products
-     */
     getFilteredProducts: async (category?: string, sub_category?: string): Promise<Product[]> => {
         try {
-            // Build the URL with query parameters
             const params = new URLSearchParams();
             if (category) params.set('category', category);
             if (sub_category) params.set('sub_category', sub_category);
-
-            const url = `get-filter-products?${params.toString()}`;
+            const url = ensureB2BPrefix(`get-filter-products?${params.toString()}`);
             const response = await api.get(url);
-
-            // Handle different response formats
             if (response.data) {
                 if (response.data.data && Array.isArray(response.data.data)) {
                     return response.data.data;
@@ -710,7 +500,6 @@ export const commoditiesAPI = {
                     return response.data;
                 }
             }
-
             console.warn('Unexpected API response format');
             return [];
         } catch (error) {
@@ -718,46 +507,25 @@ export const commoditiesAPI = {
             return [];
         }
     },
-
-    /**
-     * Gets a specific commodity by ID
-     *
-     * @param id Commodity ID
-     * @param includeProducts Whether to include products in the response
-     * @returns Commodity data
-     */
     getById: async (id: number, includeProducts: boolean = true): Promise<Commodity> => {
         const url = includeProducts
-            ? `/commodities/${id}?include=products`
-            : `/commodities/${id}`;
-
+            ? ensureB2BPrefix(`/commodities/${id}?include=products`)
+            : ensureB2BPrefix(`/commodities/${id}`);
         const response = await api.get<{ data: Commodity }>(url);
         return response.data.data;
     },
-
-    /**
-     * Gets a specific commodity by slug and subcategory
-     *
-     * @param slug Commodity slug
-     * @param sub_category Subcategory slug
-     * @returns Commodity data
-     */
     getBySlug: async (slug: string, sub_category: string): Promise<Commodity> => {
         try {
-            const url = `get-filter-products?category=${slug}&sub_category=${sub_category}`;
+            const url = ensureB2BPrefix(`get-filter-products?category=${slug}&sub_category=${sub_category}`);
             const response = await api.get(url);
-
-            // Handle different response formats
             if (response.data && response.data.data) {
                 return response.data.data;
             } else if (response.data) {
                 return response.data;
             }
-
             throw new Error('Invalid response format from API');
         } catch (error) {
             console.error('Error fetching commodity by slug:', error);
-            // Return a minimal valid Commodity object
             return {
                 id: 0,
                 name: slug,
@@ -768,43 +536,16 @@ export const commoditiesAPI = {
             };
         }
     },
-
-    /**
-     * Gets products for a specific commodity
-     *
-     * @param commodityId Commodity ID
-     * @returns Array of products
-     */
     getProducts: async (commodityId: number): Promise<CommodityProduct[]> => {
-        const response = await api.get<{ data: CommodityProduct[] }>(
-            `/commodities/${commodityId}/products`
-        );
+        const response = await api.get<{ data: CommodityProduct[] }>(ensureB2BPrefix(`/commodities/${commodityId}/products`));
         return response.data.data;
     },
-
-    /**
-     * Gets a specific product by ID
-     *
-     * @param productId Product ID
-     * @returns Product data
-     */
     getProductById: async (productId: number): Promise<CommodityProduct> => {
-        const response = await api.get<{ data: CommodityProduct }>(
-            `/commodity-products/${productId}`
-        );
+        const response = await api.get<{ data: CommodityProduct }>(ensureB2BPrefix(`/commodity-products/${productId}`));
         return response.data.data;
     },
-
-    /**
-     * Gets a specific product by slug
-     *
-     * @param slug Product slug
-     * @returns Product data
-     */
     getProductBySlug: async (slug: string): Promise<CommodityProduct> => {
-        const response = await api.get<{ data: CommodityProduct }>(
-            `/commodity-products/slug/${slug}`
-        );
+        const response = await api.get<{ data: CommodityProduct }>(ensureB2BPrefix(`/commodity-products/slug/${slug}`));
         return response.data.data;
     }
 };
@@ -824,6 +565,7 @@ const apiClient = {
     products: productsAPI,
     deals: dealsAPI,
     commodities: commoditiesAPI,
+    orders,
 };
 
 export default apiClient;

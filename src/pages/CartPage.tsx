@@ -105,16 +105,12 @@ const CartPage = () => {
                 
                 <CardFooter className="flex flex-col gap-4">
                   <Link to="/checkout" className="w-full">
-                    <Button className="w-full" disabled={!isAuthenticated}>
+                    <Button className="w-full"  >
                       Proceed to Checkout
                     </Button>
                   </Link>
                   
-                  {!isAuthenticated && (
-                    <p className="text-sm text-muted-foreground text-center">
-                      Please <Link to="/signin" className="text-earth-terracotta hover:underline">sign in</Link> to checkout
-                    </p>
-                  )}
+
                 </CardFooter>
               </Card>
             </div>

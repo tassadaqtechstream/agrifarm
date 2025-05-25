@@ -303,6 +303,34 @@ export const api = createApiClient();
 // Authentication API
 // =========================================================
 
+export interface SellerSignupFormData {
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+    phone_number: string;
+    company: string;
+    business_type: string;
+    country: string;
+    city?: string;
+    address: string;
+    description?: string;
+    product_category?: string;
+    user_type: 'seller' | 'buyer' | 'both';
+    vatin?: string;
+    preferred_language?: string;
+    preferred_product_ids?: number[];
+    other_preferred_products?: string;
+}
+
+export interface RegistrationResponse {
+    message: string;
+    user: User;
+    token: string;
+    role: string;
+}
+
 export const authAPI = {
     login: async (email: string, password: string): Promise<LoginResponse> => {
         const response = await api.post<LoginResponse>('/b2b/login', { email, password });
@@ -312,6 +340,7 @@ export const authAPI = {
         }
         return response.data;
     },
+
     logout: async (): Promise<void> => {
         try {
             await api.post(ensureB2BPrefix('/logout'));
@@ -322,16 +351,128 @@ export const authAPI = {
             localStorage.removeItem('user');
         }
     },
+
     forgotPassword: async (email: string): Promise<{ message: string }> => {
         const response = await api.post<{ message: string }>(ensureB2BPrefix('/password/reset'), { email });
         return response.data;
     },
+
+    // Updated signup method for general registration
     signup: async (formData: SignupFormData, userType?: 'seller' | 'buyer'): Promise<{ message: string }> => {
         const apiData = { ...formData, user_type: userType || formData.user_type || 'seller' };
-        const endpoint = apiData.user_type === 'buyer' ? '/b2b/register-buyer' : '/b2b/register';
+        const endpoint = apiData.user_type === 'buyer' ? '/b2b/register' : '/b2b/register';
         const response = await api.post<{ message: string }>(endpoint, apiData);
         return response.data;
     },
+
+    // New method specifically for seller registration with business details
+    registerSeller: async (formData: SellerSignupFormData): Promise<RegistrationResponse> => {
+        try {
+            const response = await api.post<RegistrationResponse>('/b2b/register', {
+                ...formData,
+                user_type: 'seller'
+            });
+
+            // Store authentication data if successful
+            if (response.data && response.data.token) {
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+            }
+
+            return response.data;
+        } catch (error: any) {
+            // Handle specific error cases
+            if (error?.isValidationError) {
+                throw {
+                    message: 'Validation failed',
+                    errors: error.errors,
+                    isValidationError: true
+                };
+            }
+
+            if (error?.status === 422) {
+                throw {
+                    message: error.message || 'Validation failed',
+                    errors: error.errors || {},
+                    isValidationError: true
+                };
+            }
+
+            // Re-throw other errors
+            throw error;
+        }
+    },
+
+    // New method for buyer registration (if needed)
+    registerBuyer: async (formData: SellerSignupFormData): Promise<RegistrationResponse> => {
+        try {
+            const response = await api.post<RegistrationResponse>('/b2b/register-business', {
+                ...formData,
+                user_type: 'buyer'
+            });
+
+            if (response.data && response.data.token) {
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+            }
+
+            return response.data;
+        } catch (error: any) {
+            if (error?.isValidationError) {
+                throw {
+                    message: 'Validation failed',
+                    errors: error.errors,
+                    isValidationError: true
+                };
+            }
+
+            if (error?.status === 422) {
+                throw {
+                    message: error.message || 'Validation failed',
+                    errors: error.errors || {},
+                    isValidationError: true
+                };
+            }
+
+            throw error;
+        }
+    },
+
+    // Register for both seller and buyer
+    registerBoth: async (formData: SellerSignupFormData): Promise<RegistrationResponse> => {
+        try {
+            const response = await api.post<RegistrationResponse>('/b2b/register-business', {
+                ...formData,
+                user_type: 'both'
+            });
+
+            if (response.data && response.data.token) {
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+            }
+
+            return response.data;
+        } catch (error: any) {
+            if (error?.isValidationError) {
+                throw {
+                    message: 'Validation failed',
+                    errors: error.errors,
+                    isValidationError: true
+                };
+            }
+
+            if (error?.status === 422) {
+                throw {
+                    message: error.message || 'Validation failed',
+                    errors: error.errors || {},
+                    isValidationError: true
+                };
+            }
+
+            throw error;
+        }
+    },
+
     getCurrentUser: (): User | null => {
         const userJson = localStorage.getItem('user');
         if (userJson) {
@@ -344,16 +485,43 @@ export const authAPI = {
         }
         return null;
     },
+
     isAuthenticated: (): boolean => !!localStorage.getItem('token'),
+
     updateProfile: async (userId: number, profileData: Partial<UserProfile>): Promise<User> => {
         const response = await api.put<{ data: User }>(ensureB2BPrefix(`/users/${userId}/profile`), profileData);
         if (response.data && response.data.data) {
             localStorage.setItem('user', JSON.stringify(response.data.data));
         }
         return response.data.data;
+    },
+
+    // Helper method to check user roles
+    hasRole: (roleName: string): boolean => {
+        const user = authAPI.getCurrentUser();
+        return user?.roles?.some(role => role.name === roleName) || false;
+    },
+
+    // Helper method to check if user is a seller
+    isSeller: (): boolean => authAPI.hasRole('seller'),
+
+    // Helper method to check if user is a buyer
+    isBuyer: (): boolean => authAPI.hasRole('buyer'),
+
+    // Method to refresh user data from server
+    refreshUser: async (): Promise<User | null> => {
+        try {
+            const response = await api.get<{ data: User }>('/b2b/user/profile');
+            if (response.data && response.data.data) {
+                localStorage.setItem('user', JSON.stringify(response.data.data));
+                return response.data.data;
+            }
+        } catch (error) {
+            console.error('Error refreshing user data:', error);
+        }
+        return null;
     }
 };
-
 // =========================================================
 // Products API
 // =========================================================

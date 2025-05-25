@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect, useContext, ReactNode } from "react";
-import {authAPI} from "@/utility/Apis.ts";
-console.log(authAPI);
+import { authAPI } from "@/utility/Apis.ts";
 
 // Define interfaces for our user data types
 interface Role {
@@ -34,7 +33,29 @@ interface User {
     roles?: Role[];
 }
 
-// Define the signup form data interface
+// Updated signup form data interface to match your API
+interface SellerSignupFormData {
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+    phone_number: string;
+    company: string;
+    business_type: string;
+    country: string;
+    city?: string;
+    address: string;
+    fiscal_address?: string;
+    zip_code?: string;
+    description?: string;
+    product_category?: string;
+    company_activity_id: number;
+    preferred_language?: string;
+    user_type: 'seller' | 'buyer' | 'both';
+}
+
+// Legacy signup interface for backwards compatibility
 interface SignupFormData {
     email: string;
     password: string;
@@ -57,10 +78,12 @@ interface AuthContextType {
     userRoles: Role[];
     isAuthenticated: boolean;
     isLoading: boolean;
-    login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+    login: (email: string, password: string) => Promise<{ success: boolean; error?: any }>;
     logout: () => void;
     hasRole: (roleName: string) => boolean;
-    signup: (formData: SignupFormData, userType?: 'seller' | 'buyer') => Promise<{ success: boolean; error?: string }>;
+    signup: (formData: SellerSignupFormData) => Promise<{ success: boolean; error?: any }>;
+    // Legacy signup for backwards compatibility
+    signupLegacy: (formData: SignupFormData, userType?: 'seller' | 'buyer') => Promise<{ success: boolean; error?: any }>;
 }
 
 interface AuthProviderProps {
@@ -107,7 +130,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, []);
 
     // Login function
-    const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    const login = async (email: string, password: string): Promise<{ success: boolean; error?: any }> => {
         try {
             // Use the authAPI utility
             const { token, user } = await authAPI.login(email, password);
@@ -124,45 +147,55 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
             return { success: true };
         } catch (error: any) {
-            if (error.response) {
-                return {
-                    success: false,
-                    error: error.response.data.message || "Login failed",
-                };
-            }
+            console.error("Login error:", error);
             return {
                 success: false,
-                error: "Network error",
+                error: error,
             };
         }
     };
 
-    // Updated signup function to support different user types
-    const signup = async (
-        formData: SignupFormData,
-        userType?: 'seller' | 'buyer'
-    ): Promise<{ success: boolean; error?: string }> => {
+    // Updated signup function for seller registration
+    const signup = async (formData: SellerSignupFormData): Promise<{ success: boolean; error?: any }> => {
         try {
-            // Use the updated authAPI utility with userType parameter
-            await authAPI.signup(formData, userType);
+            // Use the registerSeller method from your API
+            const result = await authAPI.registerSeller(formData);
 
-            // Return success response
+            // If registration includes token (auto-login), update auth state
+            if (result.token && result.user) {
+                localStorage.setItem("token", result.token);
+                localStorage.setItem("user", JSON.stringify(result.user));
+
+                setCurrentUser(result.user);
+                setUserProfile(result.user.profile || null);
+                setUserRoles(result.user.roles || []);
+                setIsAuthenticated(true);
+            }
+
             return { success: true };
         } catch (error: any) {
             console.error("Registration error:", error);
-
-            // Handle API error response
-            if (error.response) {
-                return {
-                    success: false,
-                    error: error.response.data.message || "Registration failed",
-                };
-            }
-
-            // Handle network/other errors
             return {
                 success: false,
-                error: error.message || "An unexpected error occurred during registration",
+                error: error,
+            };
+        }
+    };
+
+    // Legacy signup function for backwards compatibility
+    const signupLegacy = async (
+        formData: SignupFormData,
+        userType?: 'seller' | 'buyer'
+    ): Promise<{ success: boolean; error?: any }> => {
+        try {
+            // Use the legacy authAPI signup method
+            await authAPI.signup(formData, userType);
+            return { success: true };
+        } catch (error: any) {
+            console.error("Legacy registration error:", error);
+            return {
+                success: false,
+                error: error,
             };
         }
     };
@@ -190,6 +223,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return userRoles.some((role) => role.name === roleName);
     };
 
+    // Helper function to refresh user data from server
+    const refreshUserData = async () => {
+        try {
+            const updatedUser = await authAPI.refreshUser();
+            if (updatedUser) {
+                setCurrentUser(updatedUser);
+                setUserProfile(updatedUser.profile || null);
+                setUserRoles(updatedUser.roles || []);
+            }
+        } catch (error) {
+            console.error("Error refreshing user data:", error);
+        }
+    };
+
     // Context value
     const value: AuthContextType = {
         currentUser,
@@ -200,7 +247,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         login,
         logout,
         hasRole,
-        signup, // Updated signup function in context value
+        signup, // Updated signup function
+        signupLegacy, // Legacy signup for backwards compatibility
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

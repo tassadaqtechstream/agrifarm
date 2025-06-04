@@ -27,27 +27,53 @@ const Navbar = () => {
 
   // Mock cart items count
   const totalItems = 3;
-
-  const isActive = (path) => {
+   const isActive = (path) => {
     return window.location.pathname === path;
   };
 
   // Check if user is a seller
-  const isSeller = hasRole('seller') || userProfile?.user_type === 'seller';
+  const isSeller = hasRole('seller') ;
 
   return (
       <header className="sticky top-0 z-40 w-full border-b border-gray-200 bg-white shadow-sm">
         <div className="container mx-auto px-4 flex h-14 items-center">
           <a href="/" className="mr-4 flex items-center">
-            <div className="font-bold text-2xl flex flex-col">
-              <div>
-                <span className="text-orange-600">Harv</span>
-                <span className="text-green-700">3</span>
-                <span className="text-orange-600">st</span>
-                <span className="text-green-700 ml-1">MP</span>
+            {/* Option 1: Image only logo */}
+            <img
+                src="/lovable-uploads/logo.jpeg"
+                alt="Harv3st MP - sow, sell, secure"
+                className="h-8 w-auto"
+            />
+
+            {/* Option 2: Image with text logo (uncomment to use instead of Option 1)
+            <div className="flex items-center">
+              <img
+                src="/logo.png"
+                alt="Harv3st MP Logo"
+                className="h-8 w-8 mr-2"
+              />
+              <div className="font-bold text-xl flex flex-col">
+                <div>
+                  <span className="text-orange-600">Harv</span>
+                  <span className="text-green-700">3</span>
+                  <span className="text-orange-600">st</span>
+                  <span className="text-green-700 ml-1">MP</span>
+                </div>
+                <span className="text-xs text-gray-600 font-normal mt-[-2px]">sow, sell, secure</span>
               </div>
-              <span className="text-xs text-gray-600 font-normal mt-[-2px]">sow, sell, secure</span>
             </div>
+            */}
+
+            {/* Option 3: Larger logo with tagline below (uncomment to use instead of Option 1)
+            <div className="flex flex-col items-center">
+              <img
+                src="/logo.png"
+                alt="Harv3st MP"
+                className="h-10 w-auto"
+              />
+              <span className="text-xs text-gray-600 font-normal mt-1">sow, sell, secure</span>
+            </div>
+            */}
           </a>
 
           <nav className="hidden md:flex items-center gap-5 text-sm font-medium ml-4">

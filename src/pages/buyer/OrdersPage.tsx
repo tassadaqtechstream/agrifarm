@@ -97,23 +97,37 @@ const mockOrders: Order[] = [
 ];
 
 const OrdersPage: React.FC = () => {
-  const { user } = useAuth();
+  // Use proper AuthContext properties
+  const { currentUser, userProfile, isAuthenticated, isLoading: authLoading, hasRole } = useAuth();
   const { toast } = useToast();
+
   const [orders, setOrders] = useState<Order[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  useEffect(() => {
-    // Simulate API call delay
-    const timer = setTimeout(() => {
-      setOrders(mockOrders);
-      setIsLoading(false);
-    }, 1000);
+  // Check user type using AuthContext methods
+  const isBuyer = hasRole('buyer') || userProfile?.user_type === 'buyer' ||
+      (isAuthenticated && !hasRole('seller') && userProfile?.user_type !== 'seller');
 
-    return () => clearTimeout(timer);
-  }, [user]);
+  useEffect(() => {
+    // Only fetch orders if user is authenticated and not loading
+    if (isAuthenticated && !authLoading) {
+      // Simulate API call delay
+      const timer = setTimeout(() => {
+        // In a real implementation, you would filter orders by current user ID
+        // For now, we'll show all mock orders for authenticated users
+        setOrders(mockOrders);
+        setIsLoading(false);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    } else if (!authLoading && !isAuthenticated) {
+      // If not loading and not authenticated, don't show loading state
+      setIsLoading(false);
+    }
+  }, [isAuthenticated, authLoading, currentUser?.id]);
 
   useEffect(() => {
     // Filter orders based on status and search query
@@ -170,8 +184,24 @@ const OrdersPage: React.FC = () => {
     }
   };
 
+  // Show loading state while auth is loading
+  if (authLoading) {
+    return (
+        <div className="min-h-screen bg-gray-50">
+          <Navbar />
+          <main className="container mx-auto py-12 px-4 md:px-6">
+            <div className="max-w-2xl mx-auto text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-earth-terracotta mx-auto mb-4"></div>
+              <p className="text-earth-olive-dark">Loading...</p>
+            </div>
+          </main>
+          <Footer />
+        </div>
+    );
+  }
+
   // Handle when no user is logged in
-  if (!user && !isLoading) {
+  if (!isAuthenticated) {
     return (
         <div className="min-h-screen bg-gray-50">
           <Navbar />
@@ -196,6 +226,29 @@ const OrdersPage: React.FC = () => {
     );
   }
 
+  // Check if user has permission to view orders (buyers can view orders)
+  if (!isBuyer) {
+    return (
+        <div className="min-h-screen bg-gray-50">
+          <Navbar />
+          <main className="container mx-auto py-12 px-4 md:px-6">
+            <div className="max-w-2xl mx-auto text-center">
+              <h1 className="text-2xl md:text-3xl font-bold text-earth-olive-dark mb-4">
+                My Orders
+              </h1>
+              <p className="mb-6 text-muted-foreground">
+                This section is available for buyers. Please contact support if you need access.
+              </p>
+              <Button asChild className="bg-earth-terracotta hover:bg-earth-terracotta-dark">
+                <Link to="/categories">Browse Products</Link>
+              </Button>
+            </div>
+          </main>
+          <Footer />
+        </div>
+    );
+  }
+
   return (
       <div className="min-h-screen bg-gray-50">
         <Navbar />
@@ -209,6 +262,11 @@ const OrdersPage: React.FC = () => {
                 </h1>
                 <p className="text-sm text-earth-olive-dark/70 mt-1">
                   Track and manage your purchases
+                  {userProfile && (
+                      <span className="ml-2 text-earth-terracotta">
+                      • Welcome, {userProfile.first_name || currentUser?.name || 'User'}!
+                    </span>
+                  )}
                 </p>
               </div>
             </div>
@@ -304,7 +362,7 @@ const OrdersPage: React.FC = () => {
                             <TableCell>{new Date(order.created_at).toLocaleDateString()}</TableCell>
                             <TableCell>
                               {order.seller?.company_name ||
-                                  (order.seller ? `${order.seller.first_name || ''} ${order.seller.last_name || ''}` : 'Unknown Seller')}
+                                  (order.seller ? `${order.seller.first_name || ''} ${order.seller.last_name || ''}`.trim() : 'Unknown Seller')}
                             </TableCell>
                             <TableCell>OMR {order.total_amount.toFixed(2)}</TableCell>
                             <TableCell>

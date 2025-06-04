@@ -221,6 +221,92 @@ export interface ProductDetail {
         meta_keywords?: string;
     };
 }
+
+export interface CreateProductData {
+    name: string;
+    description: string;
+    category_id: number;
+    price: number;
+    stock: number;
+    unit: string;
+    currency: string;
+    weight?: number;
+    brand?: string;
+    model?: string;
+    short_description?: string;
+}
+
+export interface SellerProduct {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+    short_description?: string;
+    category_id: number;
+    seller_id: number;
+    sku: string;
+    price: number;
+    stock: number;
+    stock_status: string;
+    approval_status: 'pending' | 'approved' | 'rejected';
+    commission_rate: number;
+    is_active: boolean;
+    view_count: number;
+    wishlist_count: number;
+    purchase_count: number;
+    average_rating: number;
+    total_reviews: number;
+    weight?: number;
+    brand?: string;
+    model?: string;
+    meta_data?: {
+        unit?: string;
+        currency?: string;
+        [key: string]: any;
+    };
+    category?: {
+        id: number;
+        name: string;
+        slug: string;
+    };
+    created_at: string;
+    updated_at: string;
+}
+
+export interface SellerProductsResponse {
+    data: SellerProduct[];
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+}
+
+export interface ProductCreateResponse {
+    success: boolean;
+    message: string;
+    data: {
+        product: SellerProduct;
+        approval_status: string;
+    };
+}
+
+export interface SellerDashboardStats {
+    total_products: number;
+    active_products: number;
+    pending_approval: number;
+    out_of_stock: number;
+    low_stock: number;
+}
+
+export interface Category {
+    id: number;
+    name: string;
+    slug: string;
+    description?: string;
+    parent_id?: number;
+    is_active: boolean;
+}
+
 // =========================================================
 // Helper function to ensure /b2b/ prefix in URLs
 // =========================================================
@@ -370,7 +456,7 @@ export const authAPI = {
         try {
             const response = await api.post<RegistrationResponse>('/b2b/register', {
                 ...formData,
-                user_type: 'seller'
+                user_type: formData.user_type,
             });
 
             // Store authentication data if successful
@@ -406,7 +492,7 @@ export const authAPI = {
     // New method for buyer registration (if needed)
     registerBuyer: async (formData: SellerSignupFormData): Promise<RegistrationResponse> => {
         try {
-            const response = await api.post<RegistrationResponse>('/b2b/register-business', {
+            const response = await api.post<RegistrationResponse>('/b2b/register', {
                 ...formData,
                 user_type: 'buyer'
             });
@@ -726,7 +812,148 @@ export const commoditiesAPI = {
  * Main API client with all modules
  */
 
-console.log(authAPI);
+
+// Updated sellerAPI with ensureB2BPrefix for all endpoints
+export const sellerAPI = {
+    // Create a new product
+    createProduct: async (productData: FormData | CreateProductData): Promise<ProductCreateResponse> => {
+        try {
+            const url = ensureB2BPrefix('/store-products');
+
+            // Determine if we're sending FormData (with files) or regular data
+            const isFormData = productData instanceof FormData;
+
+            const config = isFormData ? {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            } : {};
+
+            const response = await api.post<ProductCreateResponse>(url, productData, config);
+            return response.data;
+        } catch (error: any) {
+            if (error?.isValidationError) {
+                throw {
+                    message: 'Validation failed',
+                    errors: error.errors,
+                    isValidationError: true
+                };
+            }
+
+            // Handle axios errors specifically for file uploads
+            if (error?.response?.status === 422) {
+                throw {
+                    message: error.response.data?.message || 'Validation failed',
+                    errors: error.response.data?.errors || {},
+                    isValidationError: true
+                };
+            }
+
+            throw error;
+        }
+    },
+    // Get seller's products
+    getSellerProducts: async (filters: {
+        page?: number;
+        per_page?: number;
+        status?: string;
+        category_id?: number;
+        search?: string;
+    } = {}): Promise<SellerProductsResponse> => {
+        const params = new URLSearchParams();
+        Object.entries(filters).forEach(([key, value]) => {
+            if (value !== undefined && value !== null && value !== '') {
+                params.append(key, value.toString());
+            }
+        });
+
+        const url = ensureB2BPrefix(`/products?${params.toString()}`);
+        const response = await api.get<{ success: boolean; data: SellerProductsResponse }>(url);
+        return response.data.data;
+    },
+
+    // Get specific product
+    getProduct: async (productId: number): Promise<SellerProduct> => {
+        const url = ensureB2BPrefix(`/seller/products/${productId}`);
+        const response = await api.get<{ success: boolean; data: SellerProduct }>(url);
+        return response.data.data;
+    },
+
+    // Update product
+    updateProduct: async (productId: number, productData: Partial<CreateProductData>): Promise<SellerProduct> => {
+        try {
+            const url = ensureB2BPrefix(`/seller/products/${productId}`);
+            const response = await api.put<{ success: boolean; data: SellerProduct }>(
+                url,
+                productData
+            );
+            return response.data.data;
+        } catch (error: any) {
+            if (error?.isValidationError) {
+                throw {
+                    message: 'Validation failed',
+                    errors: error.errors,
+                    isValidationError: true
+                };
+            }
+            throw error;
+        }
+    },
+
+    // Delete product
+    deleteProduct: async (productId: number): Promise<{ message: string }> => {
+        const url = ensureB2BPrefix(`/seller/products/${productId}`);
+        const response = await api.delete<{ success: boolean; message: string }>(url);
+        return { message: response.data.message };
+    },
+
+    // Get categories for product creation - using the same endpoint as commodities
+    getCategories: async (): Promise<Commodity[]> => {
+        try {
+            // Use the same endpoint as commoditiesAPI.getAll()
+            const url = ensureB2BPrefix('/all-categories');
+            const response = await api.get<CommoditiesResponse>(url);
+             return response.data.tree;
+        } catch (error: any) {
+            console.error('Error fetching categories:', error);
+            throw error;
+        }
+    },
+
+    // Get seller dashboard statistics
+    getDashboardStats: async (): Promise<SellerDashboardStats> => {
+        const url = ensureB2BPrefix('/seller/dashboard/stats');
+        const response = await api.get<{ success: boolean; data: SellerDashboardStats }>(url);
+        return response.data.data;
+    },
+
+    // Toggle product active status
+    toggleProductStatus: async (productId: number, isActive: boolean): Promise<SellerProduct> => {
+        const url = ensureB2BPrefix(`/seller/products/${productId}/status`);
+        const response = await api.patch<{ success: boolean; data: SellerProduct }>(
+            url,
+            { is_active: isActive }
+        );
+        return response.data.data;
+    },
+
+    // Get low stock products
+    getLowStockProducts: async (): Promise<SellerProduct[]> => {
+        const url = ensureB2BPrefix('/seller/products/low-stock');
+        const response = await api.get<{ success: boolean; data: SellerProduct[] }>(url);
+        return response.data.data;
+    },
+
+    // Update product stock
+    updateStock: async (productId: number, stock: number): Promise<SellerProduct> => {
+        const url = ensureB2BPrefix(`/seller/products/${productId}/stock`);
+        const response = await api.patch<{ success: boolean; data: SellerProduct }>(
+            url,
+            { stock }
+        );
+        return response.data.data;
+    }
+};
 const apiClient = {
     api,
     auth: authAPI,
@@ -734,6 +961,7 @@ const apiClient = {
     deals: dealsAPI,
     commodities: commoditiesAPI,
     orders,
+    seller: sellerAPI
 };
 
 export default apiClient;

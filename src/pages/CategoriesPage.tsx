@@ -27,13 +27,21 @@ const CategoriesPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Price range state - now dynamic
+  const [priceRange, setPriceRange] = useState({
+    min: 0,
+    max: 100,
+    currentMin: 0,
+    currentMax: 100
+  });
+
   const [filters, setFilters] = useState({
     search: "",
     category: "",
     organic: false,
     companyMaintained: false,
     authenticated: false,
-    priceRange: [0, 20],
+    priceRange: [0, 100], // Will be updated dynamically
     locations: []
   });
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -42,6 +50,52 @@ const CategoriesPage = () => {
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [productsError, setProductsError] = useState(null);
+
+  // Function to calculate price range from products
+  const calculatePriceRange = (productsData) => {
+    if (!productsData || productsData.length === 0) {
+      return { min: 0, max: 100 };
+    }
+
+    const prices = productsData
+        .map(product => parseFloat(product.price) || 0)
+        .filter(price => price > 0);
+
+    if (prices.length === 0) {
+      return { min: 0, max: 100 };
+    }
+
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+
+    // Add some padding to the range
+    const padding = (maxPrice - minPrice) * 0.1; // 10% padding
+    const adjustedMin = Math.max(0, Math.floor(minPrice - padding));
+    const adjustedMax = Math.ceil(maxPrice + padding);
+
+    return {
+      min: adjustedMin,
+      max: adjustedMax
+    };
+  };
+
+  // Function to update price range and filters
+  const updatePriceRange = (productsData) => {
+    const { min, max } = calculatePriceRange(productsData);
+
+    setPriceRange({
+      min,
+      max,
+      currentMin: min,
+      currentMax: max
+    });
+
+    // Update filters to match the new range
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      priceRange: [min, max]
+    }));
+  };
 
   // Function to get icon component from string name
   const getIconComponent = (iconName) => {
@@ -112,37 +166,54 @@ const CategoriesPage = () => {
     fetchCategories();
   }, []);
 
-  // Fetch initial products
+  // Fetch initial products - ALL PRODUCTS WITHOUT ANY FILTER
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchAllProducts = async () => {
       try {
         setLoadingProducts(true);
+        console.log("Fetching all products on initial load...");
+
         const response = await apiClient.products.getAllProducts();
-        // Check if response has a data property that contains the products array
+        console.log("API Response:", response);
+
+        let productsData = [];
+
+        // Handle different response formats
         if (response?.data && Array.isArray(response.data)) {
-          setProducts(response.data);
+          productsData = response.data;
         } else if (Array.isArray(response)) {
-          // If response itself is the array
-          setProducts(response);
+          productsData = response;
+        } else if (response?.products && Array.isArray(response.products)) {
+          productsData = response.products;
         } else {
-          // Fallback to empty array if unexpected format
           console.warn('Unexpected API response format:', response);
-          setProducts([]);
+          productsData = [];
         }
+
+        console.log("Products loaded:", productsData.length);
+        setProducts(productsData);
+
+        // Update price range based on loaded products
+        updatePriceRange(productsData);
+
         setProductsError(null);
+
       } catch (err) {
-        console.error("Error fetching products:", err);
-        setProductsError("Failed to load products.");
+        console.error("Error fetching all products:", err);
+        setProductsError("Failed to load products. Please try again later.");
       } finally {
         setLoadingProducts(false);
       }
     };
 
-    fetchProducts();
-  }, []);
+    // Fetch all products immediately when component mounts
+    fetchAllProducts();
+  }, []); // Empty dependency array - runs only once on mount
 
   // Handle filter changes
   const handleFilterChange = async (key, value) => {
+    console.log(`Filter changed: ${key} = ${value}`);
+
     // Update the filter state
     setFilters(prevFilters => ({
       ...prevFilters,
@@ -156,28 +227,44 @@ const CategoriesPage = () => {
 
         if (value === '') {
           // If "All" is selected, fetch all products
+          console.log("Fetching all products (All category selected)...");
           const response = await apiClient.products.getAllProducts();
-          // Check response format and extract products array
+
+          let productsData = [];
           if (response?.data && Array.isArray(response.data)) {
-            setProducts(response.data);
+            productsData = response.data;
           } else if (Array.isArray(response)) {
-            setProducts(response);
+            productsData = response;
+          } else if (response?.products && Array.isArray(response.products)) {
+            productsData = response.products;
           } else {
             console.warn('Unexpected API response format:', response);
-            setProducts([]);
+            productsData = [];
           }
+
+          setProducts(productsData);
+          // Update price range for all products
+          updatePriceRange(productsData);
         } else {
           // Fetch products filtered by the selected category
+          console.log(`Fetching products for category: ${value}`);
           const response = await apiClient.commodities.getFilteredProducts(value);
-          // Check response format and extract products array
+
+          let productsData = [];
           if (response?.data && Array.isArray(response.data)) {
-            setProducts(response.data);
+            productsData = response.data;
           } else if (Array.isArray(response)) {
-            setProducts(response);
+            productsData = response;
+          } else if (response?.products && Array.isArray(response.products)) {
+            productsData = response.products;
           } else {
             console.warn('Unexpected API response format:', response);
-            setProducts([]);
+            productsData = [];
           }
+
+          setProducts(productsData);
+          // Update price range for category-specific products
+          updatePriceRange(productsData);
         }
 
         setProductsError(null);
@@ -194,42 +281,62 @@ const CategoriesPage = () => {
   const handleSearch = async () => {
     try {
       setLoadingProducts(true);
+      console.log(`Searching for: ${filters.search}`);
 
       if (filters.search.trim()) {
         const response = await apiClient.products.search(filters.search);
-        // Check response format and extract products array
+
+        let productsData = [];
         if (response?.data && Array.isArray(response.data)) {
-          setProducts(response.data);
+          productsData = response.data;
         } else if (Array.isArray(response)) {
-          setProducts(response);
+          productsData = response;
+        } else if (response?.products && Array.isArray(response.products)) {
+          productsData = response.products;
         } else {
           console.warn('Unexpected API response format:', response);
-          setProducts([]);
+          productsData = [];
         }
+
+        setProducts(productsData);
+        // Update price range for search results
+        updatePriceRange(productsData);
       } else {
         // If search is cleared, revert to current category or all products
         if (filters.category) {
           const response = await apiClient.commodities.getFilteredProducts(filters.category);
-          // Check response format and extract products array
+
+          let productsData = [];
           if (response?.data && Array.isArray(response.data)) {
-            setProducts(response.data);
+            productsData = response.data;
           } else if (Array.isArray(response)) {
-            setProducts(response);
+            productsData = response;
+          } else if (response?.products && Array.isArray(response.products)) {
+            productsData = response.products;
           } else {
             console.warn('Unexpected API response format:', response);
-            setProducts([]);
+            productsData = [];
           }
+
+          setProducts(productsData);
+          updatePriceRange(productsData);
         } else {
           const response = await apiClient.products.getAllProducts();
-          // Check response format and extract products array
+
+          let productsData = [];
           if (response?.data && Array.isArray(response.data)) {
-            setProducts(response.data);
+            productsData = response.data;
           } else if (Array.isArray(response)) {
-            setProducts(response);
+            productsData = response;
+          } else if (response?.products && Array.isArray(response.products)) {
+            productsData = response.products;
           } else {
             console.warn('Unexpected API response format:', response);
-            setProducts([]);
+            productsData = [];
           }
+
+          setProducts(productsData);
+          updatePriceRange(productsData);
         }
       }
 
@@ -263,29 +370,48 @@ const CategoriesPage = () => {
 
   // Reset all filters
   const resetFilters = async () => {
-    setFilters({
-      search: "",
-      category: "",
-      organic: false,
-      companyMaintained: false,
-      authenticated: false,
-      priceRange: [0, 20],
-      locations: []
-    });
+    console.log("Resetting all filters...");
 
     // Fetch all products again
     try {
       setLoadingProducts(true);
       const response = await apiClient.products.getAllProducts();
-      // Check response format and extract products array
+
+      let productsData = [];
       if (response?.data && Array.isArray(response.data)) {
-        setProducts(response.data);
+        productsData = response.data;
       } else if (Array.isArray(response)) {
-        setProducts(response);
+        productsData = response;
+      } else if (response?.products && Array.isArray(response.products)) {
+        productsData = response.products;
       } else {
         console.warn('Unexpected API response format:', response);
-        setProducts([]);
+        productsData = [];
       }
+
+      console.log("All products loaded after reset:", productsData.length);
+      setProducts(productsData);
+
+      // Calculate new price range and reset filters
+      const { min, max } = calculatePriceRange(productsData);
+
+      setPriceRange({
+        min,
+        max,
+        currentMin: min,
+        currentMax: max
+      });
+
+      setFilters({
+        search: "",
+        category: "",
+        organic: false,
+        companyMaintained: false,
+        authenticated: false,
+        priceRange: [min, max],
+        locations: []
+      });
+
       setProductsError(null);
     } catch (err) {
       console.error("Error resetting products:", err);
@@ -296,7 +422,9 @@ const CategoriesPage = () => {
   };
 
   // Apply client-side filtering for the other filter criteria
+  // This will filter the products array based on the current filter state
   const filteredProducts = products.filter(product => {
+    // Only apply filters if they are actually set (not default values)
     if (filters.organic && !product.isOrganic) {
       return false;
     }
@@ -309,7 +437,10 @@ const CategoriesPage = () => {
       return false;
     }
 
-    if (product.price < filters.priceRange[0] || product.price > filters.priceRange[1]) {
+    // Price filtering - check if the current range differs from the full range
+    const productPrice = parseFloat(product.price) || 0;
+    if ((filters.priceRange[0] !== priceRange.min || filters.priceRange[1] !== priceRange.max) &&
+        (productPrice < filters.priceRange[0] || productPrice > filters.priceRange[1])) {
       return false;
     }
 
@@ -422,19 +553,31 @@ const CategoriesPage = () => {
                     <Separator className="my-4" />
 
                     <div className="mb-6">
-                      <h4 className="text-sm font-medium mb-2 text-earth-olive-dark">Price Range</h4>
+                      <h4 className="text-sm font-medium mb-2 text-earth-olive-dark">
+                        Price Range {priceRange.min !== priceRange.max && (
+                          <span className="text-xs text-earth-olive-dark/60 font-normal">
+                            (OMR{priceRange.min} - OMR{priceRange.max})
+                          </span>
+                      )}
+                      </h4>
                       <Slider
                           value={filters.priceRange}
-                          min={0}
-                          max={20}
-                          step={0.5}
+                          min={priceRange.min}
+                          max={priceRange.max}
+                          step={priceRange.max > 100 ? 5 : priceRange.max > 20 ? 1 : 0.5}
                           onValueChange={(value) => handleFilterChange('priceRange', value)}
                           className="mb-2"
+                          disabled={priceRange.min === priceRange.max}
                       />
                       <div className="flex justify-between text-sm text-earth-olive-dark/70">
-                        <span>OMR{filters.priceRange[0].toFixed(2)}</span>
-                        <span>OMR{filters.priceRange[1].toFixed(2)}</span>
+                        <span>OMR{filters.priceRange[0]?.toFixed(2) || '0.00'}</span>
+                        <span>OMR{filters.priceRange[1]?.toFixed(2) || '0.00'}</span>
                       </div>
+                      {priceRange.min === priceRange.max && (
+                          <p className="text-xs text-earth-olive-dark/50 mt-1">
+                            Price range will appear when products are loaded
+                          </p>
+                      )}
                     </div>
 
                     <Separator className="my-4" />
@@ -527,57 +670,62 @@ const CategoriesPage = () => {
                         <Button variant="outline" onClick={resetFilters}>Reset Filters</Button>
                       </div>
                   ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {filteredProducts.map((product) => (
-                            <div
-                                key={product.id}
-                                className="bg-white rounded-lg overflow-hidden shadow-sm transition-transform hover:shadow-md hover:-translate-y-1 cursor-pointer"
-                                onClick={() => navigate(`/product/${product.id}`)}
-                            >
-                              <div className="h-48 overflow-hidden relative">
-                                <img
-                                    src={product.featured_image_url}
-                                    alt={product.name}
-                                    className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
-                                />
-                                {product.isFeatured && (
-                                    <div className="absolute top-2 right-2 bg-earth-gold text-earth-olive-dark text-xs font-semibold px-2 py-1 rounded-full">
-                                      Featured
-                                    </div>
-                                )}
-                                {product.isOrganic && (
-                                    <div className="absolute top-2 left-2 bg-earth-olive text-white text-xs font-semibold px-2 py-1 rounded-full">
-                                      Organic
-                                    </div>
-                                )}
-                              </div>
-
-                              <div className="p-4">
-                                <h3 className="font-semibold text-earth-olive-dark mb-1 line-clamp-1">{product.name}</h3>
-
-                                <div className="flex items-center text-earth-olive-dark/70 text-sm mb-2">
-                                  <MapPin className="h-3 w-3 mr-1" />
-                                  <span>{product.location}</span>
+                      <div>
+                        <div className="mb-4 text-sm text-earth-olive-dark/70">
+                          Showing {filteredProducts.length} of {products.length} products
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                          {filteredProducts.map((product) => (
+                              <div
+                                  key={product.id}
+                                  className="bg-white rounded-lg overflow-hidden shadow-sm transition-transform hover:shadow-md hover:-translate-y-1 cursor-pointer"
+                                  onClick={() => navigate(`/product/${product.id}`)}
+                              >
+                                <div className="h-48 overflow-hidden relative">
+                                  <img
+                                      src={product.featured_image_url}
+                                      alt={product.name}
+                                      className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
+                                  />
+                                  {product.isFeatured && (
+                                      <div className="absolute top-2 right-2 bg-earth-gold text-earth-olive-dark text-xs font-semibold px-2 py-1 rounded-full">
+                                        Featured
+                                      </div>
+                                  )}
+                                  {product.isOrganic && (
+                                      <div className="absolute top-2 left-2 bg-earth-olive text-white text-xs font-semibold px-2 py-1 rounded-full">
+                                        Organic
+                                      </div>
+                                  )}
                                 </div>
 
-                                <div className="flex justify-between items-center">
-                                  <div className="font-semibold text-earth-terracotta">
-                                    OMR{product.price} <span className="text-xs font-normal">/ {product.unit}</span>
+                                <div className="p-4">
+                                  <h3 className="font-semibold text-earth-olive-dark mb-1 line-clamp-1">{product.name}</h3>
+
+                                  <div className="flex items-center text-earth-olive-dark/70 text-sm mb-2">
+                                    <MapPin className="h-3 w-3 mr-1" />
+                                    <span>{product.location}</span>
                                   </div>
 
-                                  <div className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                                      product.availability === "In Stock"
-                                          ? "bg-green-100 text-green-800"
-                                          : product.availability === "Limited Stock"
-                                              ? "bg-amber-100 text-amber-800"
-                                              : "bg-blue-100 text-blue-800"
-                                  }`}>
-                                    {product.availability}
+                                  <div className="flex justify-between items-center">
+                                    <div className="font-semibold text-earth-terracotta">
+                                      OMR{product.price} <span className="text-xs font-normal">/ {product.unit}</span>
+                                    </div>
+
+                                    <div className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                                        product.availability === "In Stock"
+                                            ? "bg-green-100 text-green-800"
+                                            : product.availability === "Limited Stock"
+                                                ? "bg-amber-100 text-amber-800"
+                                                : "bg-blue-100 text-blue-800"
+                                    }`}>
+                                      {product.availability}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
                   )}
                 </div>
